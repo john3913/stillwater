@@ -3,23 +3,25 @@
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 
-function ProgressRing({ pct, size = 80 }: { pct: number; size?: number }) {
-  const r = (size - 10) / 2;
+const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
+
+function ProgressRing({ pct, size = 100 }: { pct: number; size?: number }) {
+  const r = (size - 8) / 2;
   const circ = 2 * Math.PI * r;
   const offset = circ - (pct / 100) * circ;
-  const id = `grad-ring`;
   return (
     <svg width={size} height={size} className="-rotate-90">
       <defs>
-        <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#9B68D0" />
+        <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#5B8DEF" />
+          <stop offset="50%" stopColor="#9B5CAF" />
           <stop offset="100%" stopColor="#C47090" />
         </linearGradient>
       </defs>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#EDE8FF" strokeWidth={5} />
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(155,92,175,0.1)" strokeWidth={5} />
       <circle cx={size/2} cy={size/2} r={r} fill="none"
-        stroke={`url(#${id})`} strokeWidth={5}
-        strokeDasharray={circ} strokeDashoffset={offset}
+        stroke="url(#ring-grad)" strokeWidth={5}
+        strokeDasharray={circ} strokeDashoffset={pct === 0 ? circ : offset}
         strokeLinecap="round" className="transition-all duration-700"
       />
     </svg>
@@ -34,8 +36,8 @@ const sections = [
     icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
   },
   {
-    href: '/plan/proxy', title: 'Your Proxy', tag: 'Healthcare proxy',
-    description: 'Name who will speak for you when you cannot. Must be 18+, cannot be your provider.',
+    href: '/plan/proxy', title: 'Your Proxy', tag: 'Healthcare agent',
+    description: 'Name who speaks for you when you cannot. Must be 18+, cannot be your provider.',
     iconBg: '#FDE8EF', iconColor: '#C47090', barFrom: '#C47090', barTo: '#E0A070',
     icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>,
   },
@@ -72,115 +74,209 @@ export default function PlanDashboard() {
     arrangementsCompletion, documentsCompletion, overallCompletion,
   } = usePlan();
 
-  const completions = [
-    wishesCompletion, proxyCompletion, valuesCompletion, lettersCompletion,
-    arrangementsCompletion, documentsCompletion,
-  ];
+  const completions = [wishesCompletion, proxyCompletion, valuesCompletion, lettersCompletion, arrangementsCompletion, documentsCompletion];
 
   if (!loaded) return null;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16">
+    <div className="max-w-6xl mx-auto px-6 py-14">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
-        <div>
-          <p className="text-xs tracking-[0.3em] text-[#7C5CAF] uppercase mb-3">Your plan</p>
-          <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light text-[#1A1030]">
-            {overallCompletion === 0 ? "Let's begin, gently."
-              : overallCompletion === 100 ? 'Your plan is complete.'
-              : 'Your plan is taking shape.'}
-          </h1>
-          <p className="text-[#4A3870] mt-3 text-sm leading-relaxed max-w-md opacity-80">
-            {overallCompletion === 0
-              ? "Take your time. There's no rush — and no wrong place to start."
-              : `You've completed ${overallCompletion}% of your plan. Every section you finish is a gift to those you love.`}
-          </p>
-        </div>
-        <div className="flex items-center gap-4 shrink-0">
-          <div className="relative">
-            <ProgressRing pct={overallCompletion} size={80} />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-sm font-medium text-[#4A3870]">{overallCompletion}%</span>
-            </div>
+      {/* ── Hero header card ── */}
+      <div className="relative overflow-hidden rounded-3xl p-8 md:p-10 mb-10"
+        style={{
+          background: 'linear-gradient(135deg, #EBF2FF 0%, #EDE8FF 45%, #FDE8F4 100%)',
+          border: '1px solid rgba(155,92,175,0.14)',
+          boxShadow: '0 4px 28px rgba(91,141,239,0.08), 0 1px 4px rgba(90,62,138,0.06)',
+        }}>
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-20 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)' }} />
+        <div className="absolute -bottom-16 -left-16 w-60 h-60 rounded-full opacity-15 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #F5C0DC, transparent 70%)' }} />
+
+        <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="max-w-lg">
+            <p className="text-[10px] tracking-[0.45em] uppercase mb-3 text-[#8070A8]">Your plan</p>
+            <h1 className="font-[family-name:var(--font-cormorant)] text-4xl md:text-5xl font-light text-[#1A1030] leading-tight">
+              {overallCompletion === 0 ? "Let's begin, gently."
+                : overallCompletion === 100 ? 'Your plan is complete.'
+                : 'Your plan is taking shape.'}
+            </h1>
+            <p className="text-[#4A3870] mt-3 text-sm leading-relaxed" style={{ opacity: 0.75 }}>
+              {overallCompletion === 0
+                ? "Take your time. There's no rush — and no wrong place to start."
+                : `You've completed ${overallCompletion}% of your plan. Every section you finish is a gift to those you love.`}
+            </p>
           </div>
-          <div>
-            <p className="text-xs text-[#8070A8] tracking-wider uppercase">Overall</p>
-            <p className="text-sm text-[#4A3870] mt-0.5">completion</p>
+          <div className="flex items-center gap-5 shrink-0">
+            <div className="relative">
+              <ProgressRing pct={overallCompletion} size={100} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xl font-medium text-[#4A3870]">{overallCompletion}%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#A090C0] tracking-widest uppercase">Overall</p>
+              <p className="text-sm text-[#4A3870] mt-0.5 font-medium">completion</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Legal validity nudge */}
+      {/* ── Nudge banners ── */}
       {wishesCompletion === 100 && documentsCompletion < 100 && (
-        <div className="rounded-2xl p-5 mb-8 flex gap-4 items-start border" style={{ background: '#FEF0E4', borderColor: '#FAD8B0' }}>
-          <svg className="w-5 h-5 mt-0.5 shrink-0 text-[#C08858]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-          </svg>
-          <div>
+        <Link href="/plan/documents"
+          className="flex gap-4 items-center rounded-2xl p-4 mb-5 transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #FFF8EE, #FEF0E4)', border: '1px solid #F0D0A8', boxShadow: '0 2px 12px rgba(192,136,88,0.08)' }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#FEE8C0' }}>
+            <svg className="w-4 h-4 text-[#C08858]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
             <p className="text-sm font-medium text-[#7A4820]">Make it legally valid</p>
-            <p className="text-xs text-[#A06030] mt-0.5">Under Minnesota law, your directive must be signed and witnessed by a notary or two people to be enforceable. Complete the Documents section to check your status.</p>
+            <p className="text-xs text-[#A06030] mt-0.5">Under Minnesota law, your directive must be signed and witnessed to be enforceable.</p>
           </div>
-        </div>
-      )}
-
-      {/* Proxy nudge */}
-      {plan.proxy.primaryName === '' && wishesCompletion > 0 && (
-        <div className="rounded-2xl p-5 mb-8 flex gap-4 items-start border" style={{ background: '#FDE8EF', borderColor: '#F5C8D8' }}>
-          <svg className="w-5 h-5 mt-0.5 shrink-0 text-[#C47090]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg className="w-4 h-4 text-[#C08858] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <div>
-            <p className="text-sm font-medium text-[#8B3060]">Name a healthcare proxy</p>
-            <p className="text-xs text-[#B05070] mt-0.5">Your wishes need someone to carry them. Your proxy will make decisions when you cannot — it's the most important person in your plan.</p>
-          </div>
-        </div>
+        </Link>
       )}
 
-      {/* Section cards */}
-      <div className="grid md:grid-cols-2 gap-5">
+      {plan.proxy.primaryName === '' && wishesCompletion > 0 && (
+        <Link href="/plan/proxy"
+          className="flex gap-4 items-center rounded-2xl p-4 mb-5 transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #FFF0F5, #FDE8EF)', border: '1px solid #F5C8D8', boxShadow: '0 2px 12px rgba(196,112,144,0.08)' }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#FFCCD8' }}>
+            <svg className="w-4 h-4 text-[#C47090]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-[#8B3060]">Name a healthcare proxy</p>
+            <p className="text-xs text-[#B05070] mt-0.5">Your wishes need someone to carry them — it's the most important role in your plan.</p>
+          </div>
+          <svg className="w-4 h-4 text-[#C47090] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      )}
+
+      {/* ── Section grid ── */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {sections.map((s, i) => {
           const pct = completions[i];
           return (
             <Link key={s.href} href={s.href}
-              className="group block bg-white rounded-3xl p-7 hover:shadow-sm transition-all"
-              style={{ border: '1px solid #E0D8F5' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#C4B0E8'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#E0D8F5'; }}
+              className="group relative block bg-white rounded-2xl pl-6 pr-6 pt-6 pb-5 card-lift"
+              style={{
+                border: '1px solid #E0D8F5',
+                boxShadow: '0 1px 3px rgba(90,62,138,0.05)',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#C4B0E8';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 10px 32px rgba(90,62,138,0.12)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#E0D8F5';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(90,62,138,0.05)';
+              }}
             >
-              <div className="flex items-start justify-between mb-5">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
+              {/* Left gradient accent */}
+              <div className="absolute left-0 top-5 bottom-5 w-[3px] rounded-r-full"
+                style={{ background: `linear-gradient(to bottom, ${s.barFrom}, ${s.barTo})` }} />
+
+              {/* Icon + status */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center"
                   style={{ background: s.iconBg, color: s.iconColor }}>
                   {s.icon}
                 </div>
-                <span className="text-xs px-2.5 py-1 rounded-full"
+                <span className="text-[10px] px-2.5 py-1 rounded-full font-medium tracking-wide"
                   style={pct === 100
                     ? { background: '#E8F5EE', color: '#3E8868' }
                     : pct > 0
-                    ? { background: '#EDE8FF', color: '#7C5CAF' }
-                    : { background: '#F5F0FF', color: '#8070A8' }}>
-                  {pct === 100 ? 'Complete' : pct > 0 ? `${pct}%` : 'Not started'}
+                    ? { background: s.iconBg, color: s.iconColor }
+                    : { background: '#F5F0FF', color: '#A090C0' }}>
+                  {pct === 100 ? '✓ Complete' : pct > 0 ? `${pct}%` : 'Not started'}
                 </span>
               </div>
-              <p className="text-xs tracking-wider text-[#8070A8] uppercase mb-1.5">{s.tag}</p>
-              <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030] mb-2">{s.title}</h2>
-              <p className="text-[#4A3870] text-sm leading-relaxed mb-5 opacity-80">{s.description}</p>
-              <div className="h-1 bg-[#F0EBF8] rounded-full overflow-hidden">
+
+              {/* Text */}
+              <p className="text-[10px] tracking-widest uppercase mb-1.5 text-[#A090C0]">{s.tag}</p>
+              <h2 className="font-[family-name:var(--font-cormorant)] text-xl font-medium text-[#1A1030] mb-2 group-hover:text-[#2E1A60] transition-colors">
+                {s.title}
+              </h2>
+              <p className="text-[#4A3870] text-xs leading-relaxed mb-5" style={{ opacity: 0.72 }}>{s.description}</p>
+
+              {/* Progress bar */}
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#F0EBF8' }}>
                 <div className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${pct}%`, background: `linear-gradient(to right, ${s.barFrom}, ${s.barTo})` }}
-                />
+                  style={{ width: `${pct}%`, background: `linear-gradient(to right, ${s.barFrom}, ${s.barTo})` }} />
               </div>
-              <div className="mt-4 text-xs font-medium tracking-wide transition-colors" style={{ color: s.iconColor }}>
-                {pct === 0 ? 'Begin →' : pct === 100 ? 'Review →' : 'Continue →'}
+
+              {/* Footer */}
+              <div className="mt-3.5 flex items-center justify-between">
+                <span className="text-xs font-medium tracking-wide transition-colors" style={{ color: s.iconColor }}>
+                  {pct === 0 ? 'Begin' : pct === 100 ? 'Review' : 'Continue'}
+                </span>
+                <svg className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: s.iconColor }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
             </Link>
           );
         })}
       </div>
 
-      <div className="mt-16 text-center">
-        <p className="text-[#8070A8] text-xs tracking-wider leading-relaxed max-w-sm mx-auto">
-          Your plan is saved privately on this device. Share it with trusted people when you're ready.
+      {/* ── Tools ── */}
+      <div className="mt-12 pt-10" style={{ borderTop: '1px solid #E0D8F5' }}>
+        <p className="text-[10px] tracking-[0.45em] uppercase text-[#A090C0] mb-5">Tools</p>
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            {
+              href: '/plan/review',
+              iconBg: '#EDE8FF', iconColor: '#7C5CAF',
+              label: 'Review your directive',
+              sub: 'Read and print a formatted copy',
+              icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
+            },
+            {
+              href: '/plan/share',
+              iconBg: '#FDE8EF', iconColor: '#C47090',
+              label: 'Share with family',
+              sub: 'Create a private, read-only link',
+              icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>,
+            },
+            {
+              href: '/plan/welcome',
+              iconBg: '#EBF2FF', iconColor: '#5B8DEF',
+              label: 'About this plan',
+              sub: 'How Stillwater works',
+              icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+            },
+          ].map(t => (
+            <Link key={t.href} href={t.href}
+              className="flex items-center gap-4 bg-white rounded-2xl p-5 card-lift"
+              style={{ border: '1px solid #E0D8F5', boxShadow: '0 1px 3px rgba(90,62,138,0.04)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#C4B0E8'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#E0D8F5'; }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: t.iconBg, color: t.iconColor }}>
+                {t.icon}
+              </div>
+              <div>
+                <p className="text-sm font-medium text-[#1A1030]">{t.label}</p>
+                <p className="text-xs text-[#8070A8] mt-0.5">{t.sub}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-12 text-center">
+        <p className="text-[#A090C0] text-xs tracking-wider leading-relaxed max-w-sm mx-auto">
+          Your plan is saved privately on this device. Nothing is uploaded to any server.
         </p>
       </div>
     </div>
