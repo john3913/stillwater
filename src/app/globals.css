@@ -1,25 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf9f7;
-  --foreground: #2c2825;
+  --bg: #FAF8FF;
+  --bg-alt: #F5F0FF;
+  --primary: #7C5CAF;
+  --primary-dark: #5A3E8A;
+  --primary-pale: #EDE8FF;
+  --blush: #C47090;
+  --blush-pale: #FDE8EF;
+  --sage: #5E9E7E;
+  --sage-pale: #E8F5EE;
+  --peach: #C08858;
+  --peach-pale: #FEF0E4;
+  --heading: #1A1030;
+  --body: #4A3870;
+  --muted: #8070A8;
+  --border: #E0D8F5;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--heading);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-cormorant: var(--font-cormorant);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--heading);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0px, 0px); }
+  33%  { transform: translate(22px, -28px); }
+  66%  { transform: translate(-16px, 14px); }
+}
+
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0px, 0px); }
+  40%  { transform: translate(-24px, 20px); }
+  70%  { transform: translate(20px, -18px); }
+}
+
+@keyframes drift-3 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%  { transform: translate(18px, 24px); }
+}
+
+@keyframes rings-breathe {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1; }
 }

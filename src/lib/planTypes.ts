@@ -39,11 +39,45 @@ export type Letter = {
   createdAt: string;
 };
 
+export type ArrangementsData = {
+  afterPassing: 'burial' | 'cremation' | 'donate-science' | 'other' | '';
+  afterPassingNotes: string;
+  serviceType: 'religious' | 'celebration' | 'private' | 'graveside' | 'none' | '';
+  serviceNotes: string;
+  music: string;
+  readings: string;
+  finalResting: string;
+  willLocation: string;
+  insuranceLocation: string;
+  attorney: string;
+  financialAdvisor: string;
+  guardianPreference: string;
+  additionalNotes: string;
+};
+
+export type DistributionEntry = {
+  id: string;
+  name: string;
+  relationship: string;
+  hasCopy: boolean;
+};
+
+export type DocumentsData = {
+  isSigned: boolean;
+  isWitnessed: boolean;
+  witnessType: 'notary' | 'two-witnesses' | '';
+  storageLocation: string;
+  digitalBackup: string;
+  distribution: DistributionEntry[];
+};
+
 export type PlanData = {
   wishes: WishesData;
   proxy: ProxyData;
   values: ValuesData;
   letters: Letter[];
+  arrangements: ArrangementsData;
+  documents: DocumentsData;
 };
 
 export const defaultWishes: WishesData = {
@@ -62,9 +96,23 @@ export const defaultValues: ValuesData = {
   biggestHope: '', spiritualBeliefs: '', importantRituals: '',
 };
 
+export const defaultArrangements: ArrangementsData = {
+  afterPassing: '', afterPassingNotes: '', serviceType: '', serviceNotes: '',
+  music: '', readings: '', finalResting: '', willLocation: '',
+  insuranceLocation: '', attorney: '', financialAdvisor: '',
+  guardianPreference: '', additionalNotes: '',
+};
+
+export const defaultDocuments: DocumentsData = {
+  isSigned: false, isWitnessed: false, witnessType: '',
+  storageLocation: '', digitalBackup: '', distribution: [],
+};
+
 export const defaultPlan: PlanData = {
   wishes: defaultWishes,
   proxy: defaultProxy,
   values: defaultValues,
   letters: [],
+  arrangements: defaultArrangements,
+  documents: defaultDocuments,
 };

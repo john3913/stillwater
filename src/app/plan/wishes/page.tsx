@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 import type { WishesData } from '@/lib/planTypes';
 
+const P = '#7C5CAF';
+
 type Step = {
   id: keyof Pick<WishesData, 'cpr' | 'ventilator' | 'dialysis' | 'feedingTube' | 'setting' | 'painPriority' | 'organDonation'>;
   tag: string;
@@ -77,9 +79,9 @@ const steps: Step[] = [
     question: 'When it comes to your care near the end of life, what matters most to you?',
     context: 'This question guides how your care team balances keeping you comfortable with pursuing available treatments. It is one of the most important questions in your plan.',
     options: [
-      { value: 'comfort',   label: 'Prioritize my comfort',     description: 'Relieve my pain and discomfort above all else, even if it may shorten my life.' },
+      { value: 'comfort',   label: 'Prioritize my comfort',         description: 'Relieve my pain and discomfort above all else, even if it may shorten my life.' },
       { value: 'balance',   label: 'Balance comfort and treatment', description: 'Weigh quality of life and treatment options together. Include my proxy in these decisions.' },
-      { value: 'treatment', label: 'Pursue every treatment',    description: 'Try every available treatment to extend my life, even if there\'s some discomfort.' },
+      { value: 'treatment', label: 'Pursue every treatment',        description: 'Try every available treatment to extend my life, even if there\'s some discomfort.' },
     ],
   },
   {
@@ -96,39 +98,24 @@ const steps: Step[] = [
   },
 ];
 
-function ChoiceCard({
-  option, selected, onSelect,
-}: {
-  option: Step['options'][number];
-  selected: boolean;
-  onSelect: () => void;
+function ChoiceCard({ option, selected, onSelect }: {
+  option: Step['options'][number]; selected: boolean; onSelect: () => void;
 }) {
   return (
-    <button
-      onClick={onSelect}
-      className={`w-full text-left p-5 rounded-2xl border-2 transition-all duration-150 ${
-        selected
-          ? 'border-teal-600 bg-teal-50'
-          : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
-      }`}
-    >
+    <button onClick={onSelect} className="w-full text-left p-5 rounded-2xl border-2 transition-all duration-150"
+      style={selected
+        ? { borderColor: P, background: '#F5F0FF' }
+        : { borderColor: '#E0D8F5', background: 'white' }}>
       <div className="flex items-start gap-4">
-        <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-          selected ? 'border-teal-600 bg-teal-600' : 'border-stone-300'
-        }`}>
-          {selected && (
-            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 12 12">
-              <path d="M10 3L5 8.5 2 5.5l-1 1L5 10.5l6-7-1-0.5z" />
-            </svg>
-          )}
+        <div className="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors"
+          style={selected ? { borderColor: P, background: P } : { borderColor: '#C4B0E8' }}>
+          {selected && <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 12 12">
+            <path d="M10 3L5 8.5 2 5.5l-1 1L5 10.5l6-7-1-0.5z" />
+          </svg>}
         </div>
         <div>
-          <p className={`font-medium text-sm ${selected ? 'text-teal-900' : 'text-stone-800'}`}>
-            {option.label}
-          </p>
-          <p className={`text-xs mt-1 leading-relaxed ${selected ? 'text-teal-700' : 'text-stone-500'}`}>
-            {option.description}
-          </p>
+          <p className="font-medium text-sm" style={{ color: selected ? '#2E1A60' : '#1A1030' }}>{option.label}</p>
+          <p className="text-xs mt-1 leading-relaxed" style={{ color: selected ? P : '#8070A8' }}>{option.description}</p>
         </div>
       </div>
     </button>
@@ -159,9 +146,7 @@ export default function WishesPage() {
   const current = answers[step.id];
   const progress = ((stepIndex + 1) / steps.length) * 100;
 
-  const select = (value: string) => {
-    setAnswers(prev => ({ ...prev, [step.id]: value as never }));
-  };
+  const select = (value: string) => setAnswers(prev => ({ ...prev, [step.id]: value as never }));
 
   const next = () => {
     if (isLast) {
@@ -181,15 +166,15 @@ export default function WishesPage() {
   if (saved) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
-        <div className="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center mb-6">
-          <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: '#EDE8FF' }}>
+          <svg className="w-8 h-8 text-[#7C5CAF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-stone-800 mb-3">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
           Your wishes are saved.
         </h2>
-        <p className="text-stone-500 text-sm max-w-xs leading-relaxed">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed">
           These answers will guide your care team and your loved ones. You can return and update them anytime.
         </p>
       </div>
@@ -198,55 +183,42 @@ export default function WishesPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
-      {/* Progress */}
       <div className="mb-10">
         <div className="flex items-center justify-between mb-3">
-          <Link href="/plan" className="text-xs text-stone-400 hover:text-stone-600 transition-colors">
-            ← Your plan
-          </Link>
-          <span className="text-xs text-stone-400 tracking-wider">
-            {stepIndex + 1} of {steps.length}
-          </span>
+          <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+          <span className="text-xs text-[#8070A8] tracking-wider">{stepIndex + 1} of {steps.length}</span>
         </div>
-        <div className="h-1 bg-stone-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-teal-600 rounded-full transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
+        <div className="h-1 rounded-full overflow-hidden" style={{ background: '#EDE8FF' }}>
+          <div className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${progress}%`, background: 'linear-gradient(to right, #9B68D0, #C47090)' }} />
         </div>
       </div>
 
-      {/* Question */}
       <div className="mb-10">
-        <p className="text-xs tracking-[0.3em] text-teal-700 uppercase mb-4">{step.tag}</p>
-        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-stone-800 leading-tight mb-5">
+        <p className="text-xs tracking-[0.3em] text-[#7C5CAF] uppercase mb-4">{step.tag}</p>
+        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] leading-tight mb-5">
           {step.question}
         </h2>
-        <p className="text-stone-500 text-sm leading-relaxed bg-stone-50 rounded-2xl p-4 border border-stone-100">
+        <p className="text-[#4A3870] text-sm leading-relaxed rounded-2xl p-4 opacity-80"
+          style={{ background: '#F5F0FF', border: '1px solid #E0D8F5' }}>
           {step.context}
         </p>
       </div>
 
-      {/* Choices */}
       <div className="flex flex-col gap-3 mb-8">
         {step.options.map(opt => (
-          <ChoiceCard
-            key={opt.value}
-            option={opt}
-            selected={current === opt.value}
-            onSelect={() => select(opt.value)}
-          />
+          <ChoiceCard key={opt.value} option={opt} selected={current === opt.value} onSelect={() => select(opt.value)} />
         ))}
       </div>
 
-      {/* Donation notes */}
       {step.id === 'organDonation' && answers.organDonation === 'specific' && (
         <div className="mb-8">
-          <label className="block text-xs text-stone-500 tracking-wider uppercase mb-2">
-            Specific donation wishes
-          </label>
+          <label className="block text-xs text-[#8070A8] tracking-wider uppercase mb-2">Specific donation wishes</label>
           <textarea
-            className="w-full rounded-2xl border border-stone-200 p-4 text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-teal-400 resize-none bg-white"
+            className="w-full rounded-2xl px-4 py-3 text-sm placeholder:text-[#C4B0E8] focus:outline-none resize-none"
+            style={{ border: '1px solid #E0D8F5', background: 'white', color: '#1A1030' }}
+            onFocus={e => (e.target.style.borderColor = '#A090D8')}
+            onBlur={e => (e.target.style.borderColor = '#E0D8F5')}
             rows={3}
             placeholder="e.g. I would like to donate my corneas and heart, but not my kidneys."
             value={donationNotes}
@@ -255,14 +227,16 @@ export default function WishesPage() {
         </div>
       )}
 
-      {/* Additional notes on last step */}
       {isLast && (
         <div className="mb-8">
-          <label className="block text-xs text-stone-500 tracking-wider uppercase mb-2">
-            Anything else you'd like to add? <span className="text-stone-400">(optional)</span>
+          <label className="block text-xs text-[#8070A8] tracking-wider uppercase mb-2">
+            Anything else you'd like to add? <span className="text-[#C4B0E8]">(optional)</span>
           </label>
           <textarea
-            className="w-full rounded-2xl border border-stone-200 p-4 text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-teal-400 resize-none bg-white"
+            className="w-full rounded-2xl px-4 py-3 text-sm placeholder:text-[#C4B0E8] focus:outline-none resize-none"
+            style={{ border: '1px solid #E0D8F5', background: 'white', color: '#1A1030' }}
+            onFocus={e => (e.target.style.borderColor = '#A090D8')}
+            onBlur={e => (e.target.style.borderColor = '#E0D8F5')}
             rows={4}
             placeholder="Any other instructions, values, or context that matters to you…"
             value={additionalNotes}
@@ -271,23 +245,15 @@ export default function WishesPage() {
         </div>
       )}
 
-      {/* Nav buttons */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={back}
-          className="text-sm text-stone-400 hover:text-stone-600 transition-colors px-4 py-2"
-        >
+        <button onClick={back} className="text-sm text-[#8070A8] hover:text-[#4A3870] transition-colors px-4 py-2">
           ← {stepIndex === 0 ? 'Back to plan' : 'Previous'}
         </button>
-        <button
-          onClick={next}
-          disabled={!current}
-          className={`px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all ${
-            current
-              ? 'bg-teal-700 text-white hover:bg-teal-800'
-              : 'bg-stone-100 text-stone-400 cursor-not-allowed'
-          }`}
-        >
+        <button onClick={next} disabled={!current}
+          className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all"
+          style={current
+            ? { background: '#7C5CAF', color: 'white' }
+            : { background: '#EDE8FF', color: '#8070A8', cursor: 'not-allowed' }}>
           {isLast ? 'Save my wishes' : 'Next →'}
         </button>
       </div>
