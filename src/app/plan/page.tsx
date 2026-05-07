@@ -6,6 +6,24 @@ import { usePlan } from '@/hooks/usePlan';
 
 const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
 
+type MilestoneData = {
+  pct: number; key: string; emoji: string; label: string;
+  heading: string; body: string; showShare?: boolean;
+};
+
+const MILESTONES: MilestoneData[] = [
+  { pct: 25, key: 'stillwater_milestone_25', emoji: '✧', label: 'A meaningful start',
+    heading: "You've begun.", body: "That's the hardest step. Most people never take it. Every section you complete is a gift to those who love you." },
+  { pct: 50, key: 'stillwater_milestone_50', emoji: '✦', label: 'Halfway',
+    heading: "Halfway there.", body: "You're doing something most people never do. Every section you finish gives the people you love clarity when they need it most." },
+  { pct: 75, key: 'stillwater_milestone_75', emoji: '✦✦', label: 'Nearly complete',
+    heading: "Nearly complete.", body: "Your loved ones are lucky to have someone who cares this much. Finish the last sections and your plan will be ready to share." },
+  { pct: 100, key: 'stillwater_celebrated', emoji: '✦', label: 'Plan complete',
+    heading: "Your plan is a gift.",
+    body: "You've completed every section of your Minnesota Health Care Directive. The most important thing now is to share it with the people who need it.",
+    showShare: true },
+];
+
 function ProgressRing({ pct, size = 100 }: { pct: number; size?: number }) {
   const r = (size - 8) / 2;
   const circ = 2 * Math.PI * r;
@@ -111,7 +129,7 @@ export default function PlanDashboard() {
   const completions = [wishesCompletion, proxyCompletion, valuesCompletion, lettersCompletion, arrangementsCompletion, documentsCompletion];
 
   const [nameInput, setNameInput] = useState('');
-  const [celebrated, setCelebrated] = useState(false);
+  const [activeMilestone, setActiveMilestone] = useState<MilestoneData | null>(null);
   const prevPct = useRef(0);
 
   useEffect(() => {
@@ -120,11 +138,13 @@ export default function PlanDashboard() {
 
   useEffect(() => {
     if (!loaded) return;
-    if (overallCompletion === 100 && prevPct.current < 100) {
-      const already = localStorage.getItem('stillwater_celebrated');
-      if (!already) {
-        localStorage.setItem('stillwater_celebrated', '1');
-        setCelebrated(true);
+    for (const m of [...MILESTONES].reverse()) {
+      if (overallCompletion >= m.pct && prevPct.current < m.pct) {
+        if (!localStorage.getItem(m.key)) {
+          localStorage.setItem(m.key, '1');
+          setActiveMilestone(m);
+          break;
+        }
       }
     }
     prevPct.current = overallCompletion;
@@ -141,30 +161,34 @@ export default function PlanDashboard() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-14">
 
-      {/* ── Celebration overlay ── */}
-      {celebrated && (
+      {/* ── Milestone overlay ── */}
+      {activeMilestone && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6"
-          style={{ background: 'rgba(26,16,48,0.72)', backdropFilter: 'blur(8px)' }}>
-          <div className="relative max-w-md w-full rounded-3xl p-10 text-center overflow-hidden"
+          style={{ background: 'rgba(26,16,48,0.75)', backdropFilter: 'blur(10px)' }}>
+          <div className="relative max-w-md w-full rounded-3xl p-10 text-center overflow-hidden animate-fade-up"
             style={{ background: 'linear-gradient(135deg, #EBF2FF, #EDE8FF, #FDE8EF)', border: '1px solid rgba(155,92,175,0.2)', boxShadow: '0 24px 80px rgba(91,141,239,0.22)' }}>
-            <div className="text-5xl mb-5 select-none" style={{ filter: 'drop-shadow(0 2px 8px rgba(155,92,175,0.3))' }}>✦</div>
-            <p className="text-[10px] tracking-[0.5em] uppercase text-[#8070A8] mb-3">Plan complete</p>
+            <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full opacity-25 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)', animation: 'float-a 14s ease-in-out infinite' }} />
+            <div className="text-4xl mb-5 select-none" style={{ filter: 'drop-shadow(0 2px 8px rgba(155,92,175,0.35))' }}>{activeMilestone.emoji}</div>
+            <p className="text-[10px] tracking-[0.5em] uppercase text-[#8070A8] mb-3">{activeMilestone.label}</p>
             <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-4">
-              Your plan is a gift.
+              {activeMilestone.heading}
             </h2>
-            <p className="text-sm text-[#4A3870] leading-relaxed mb-8" style={{ opacity: 0.8 }}>
-              You've completed every section of your Minnesota Health Care Directive. The most important thing you can do now is share it with the people who need it.
+            <p className="text-sm text-[#4A3870] leading-relaxed mb-8" style={{ opacity: 0.85 }}>
+              {activeMilestone.body}
             </p>
             <div className="flex flex-col gap-3">
-              <Link href="/plan/share"
-                className="w-full py-3.5 rounded-2xl text-sm font-medium text-white text-center transition-all hover:-translate-y-0.5"
-                style={{ background: GRAD, boxShadow: '0 4px 20px rgba(91,141,239,0.28)' }}
-                onClick={() => setCelebrated(false)}>
-                Share with family →
-              </Link>
-              <button onClick={() => setCelebrated(false)}
+              {activeMilestone.showShare && (
+                <Link href="/plan/share"
+                  className="w-full py-3.5 rounded-2xl text-sm font-medium text-white text-center transition-all hover:-translate-y-0.5"
+                  style={{ background: GRAD, boxShadow: '0 4px 20px rgba(91,141,239,0.28)' }}
+                  onClick={() => setActiveMilestone(null)}>
+                  Share with family →
+                </Link>
+              )}
+              <button onClick={() => setActiveMilestone(null)}
                 className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors py-2">
-                Review your plan
+                {activeMilestone.showShare ? 'Review your plan' : 'Continue building your plan →'}
               </button>
             </div>
           </div>
@@ -285,7 +309,7 @@ export default function PlanDashboard() {
               Last updated {daysSinceUpdate} days ago. Life changes — your plan should too.
             </p>
           </div>
-          <Link href="/plan/wishes"
+          <Link href="/plan/checkin"
             className="px-4 py-2 rounded-xl text-xs font-medium text-white shrink-0 transition-all hover:-translate-y-0.5"
             style={{ background: reviewUrgent ? '#C47090' : '#C08858' }}>
             Review now
@@ -299,10 +323,11 @@ export default function PlanDashboard() {
           const pct = completions[i];
           return (
             <Link key={s.href} href={s.href}
-              className="group relative block bg-white rounded-2xl pl-6 pr-6 pt-6 pb-5 card-lift"
+              className="group relative block bg-white rounded-2xl pl-6 pr-6 pt-6 pb-5 card-lift animate-fade-up"
               style={{
                 border: '1px solid #E0D8F5',
                 boxShadow: '0 1px 3px rgba(90,62,138,0.05)',
+                animationDelay: `${i * 60}ms`,
               }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.borderColor = '#C4B0E8';
@@ -368,8 +393,8 @@ export default function PlanDashboard() {
         {/* Featured 3-column: Readiness + Guided walkthrough + Notify proxy */}
         <div className="grid md:grid-cols-3 gap-4 mb-10">
           <Link href="/plan/readiness"
-            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #EDE8FF 0%, #EBF2FF 100%)', border: '1px solid #C8C0F0', boxShadow: '0 2px 18px rgba(91,141,239,0.1)' }}>
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5 animate-fade-up"
+            style={{ background: 'linear-gradient(135deg, #EDE8FF 0%, #EBF2FF 100%)', border: '1px solid #C8C0F0', boxShadow: '0 2px 18px rgba(91,141,239,0.1)', animationDelay: '160ms' }}>
             <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20 pointer-events-none"
               style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)', animation: 'float-a 14s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
@@ -393,8 +418,8 @@ export default function PlanDashboard() {
           </Link>
 
           <Link href="/plan/guide"
-            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #FFF8EE 0%, #FEF0E4 100%)', border: '1px solid #F0D0A8', boxShadow: '0 2px 18px rgba(192,136,88,0.1)' }}>
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5 animate-fade-up"
+            style={{ background: 'linear-gradient(135deg, #FFF8EE 0%, #FEF0E4 100%)', border: '1px solid #F0D0A8', boxShadow: '0 2px 18px rgba(192,136,88,0.1)', animationDelay: '240ms' }}>
             <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-25 pointer-events-none"
               style={{ background: 'radial-gradient(circle, #FFD0A0, transparent 70%)', animation: 'float-b 17s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
@@ -418,8 +443,8 @@ export default function PlanDashboard() {
           </Link>
 
           <Link href="/plan/notify-proxy"
-            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #E8F5EE 0%, #EDF7F3 100%)', border: '1px solid #B8DFC8', boxShadow: '0 2px 18px rgba(62,136,104,0.1)' }}>
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5 animate-fade-up"
+            style={{ background: 'linear-gradient(135deg, #E8F5EE 0%, #EDF7F3 100%)', border: '1px solid #B8DFC8', boxShadow: '0 2px 18px rgba(62,136,104,0.1)', animationDelay: '320ms' }}>
             <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-25 pointer-events-none"
               style={{ background: 'radial-gradient(circle, #A8DFC0, transparent 70%)', animation: 'float-c 20s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
@@ -438,6 +463,59 @@ export default function PlanDashboard() {
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-[#5E9E7E]">
               {plan.proxy.primaryName ? `Notify ${plan.proxy.primaryName.split(' ')[0]}` : 'Learn more'}
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+        </div>
+
+        {/* Featured secondary: checkin + first48 */}
+        <div className="grid md:grid-cols-2 gap-4 mb-10">
+          <Link href="/plan/checkin"
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5 animate-fade-up"
+            style={{ background: 'linear-gradient(135deg, #E8F5EE 0%, #EDF7F3 100%)', border: '1px solid #B8DFC8', boxShadow: '0 2px 18px rgba(62,136,104,0.08)', animationDelay: '380ms' }}>
+            <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-20 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #A8DFC0, transparent 70%)', animation: 'float-a 16s ease-in-out infinite' }} />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
+              style={{ background: 'linear-gradient(135deg, #3E8868, #5E9E7E)', boxShadow: '0 4px 14px rgba(62,136,104,0.28)' }}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-[#2E1A60] text-base mb-1">Annual check-in</p>
+              <p className="text-xs text-[#6070A8] leading-relaxed">
+                {showReviewBanner ? 'Your plan is due for a review. Walk through each section and confirm it still reflects your wishes.' : 'Walk through each section and confirm your plan still reflects your wishes.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[#3E8868]">
+              Begin check-in
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          <Link href="/plan/first48"
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5 animate-fade-up"
+            style={{ background: 'linear-gradient(135deg, #F5F0FF 0%, #EDE8FF 100%)', border: '1px solid #D4C8F0', boxShadow: '0 2px 18px rgba(124,92,175,0.08)', animationDelay: '440ms' }}>
+            <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-20 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #D0C0FF, transparent 70%)', animation: 'float-b 19s ease-in-out infinite' }} />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
+              style={{ background: 'linear-gradient(135deg, #7C5CAF, #9B5CAF)', boxShadow: '0 4px 14px rgba(124,92,175,0.28)' }}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-[#2E1A60] text-base mb-1">Guide for my family</p>
+              <p className="text-xs text-[#6070A8] leading-relaxed">
+                A personalized, printable step-by-step guide for your loved ones covering the first 48 hours and beyond.
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[#7C5CAF]">
+              View &amp; print guide
               <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

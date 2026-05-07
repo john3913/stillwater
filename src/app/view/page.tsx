@@ -66,9 +66,9 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function Section({ title, color, children }: { title: string; color: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-3xl p-8 mb-6" style={{ border: '1px solid #E0D8F5' }}>
+    <div className="bg-white rounded-3xl p-8 mb-6 card-lift" style={{ border: '1px solid #E0D8F5', boxShadow: '0 1px 4px rgba(90,62,138,0.05)' }}>
       <div className="flex items-center gap-3 mb-6 pb-4" style={{ borderBottom: '1px solid #E0D8F5' }}>
-        <div className="w-1 h-6 rounded-full" style={{ background: color }} />
+        <div className="w-[3px] h-7 rounded-full" style={{ background: color }} />
         <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030]">{title}</h2>
       </div>
       {children}
@@ -126,45 +126,69 @@ export default function ViewPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF8FF]">
+
+      {/* Ambient wave background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden no-print">
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '40%',
+            animation: 'wave-bwd 40s linear infinite', opacity: 0.035 }}>
+          <path fill="#9B5CAF" d="M0,32 q25,-22 50,0 q25,22 50,0 q25,-22 50,0 q25,22 50,0 L200,100 L0,100 Z" />
+        </svg>
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '40%',
+            animation: 'wave-fwd 28s linear infinite', opacity: 0.045 }}>
+          <path fill="#5B8DEF" d="M0,58 q25,-16 50,0 q25,16 50,0 q25,-16 50,0 q25,16 50,0 L200,100 L0,100 Z" />
+        </svg>
+      </div>
+
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#FAF8FF]/85 backdrop-blur-lg border-b border-[#E0D8F5] no-print">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#FAF8FF]/90 backdrop-blur-xl border-b border-[#E0D8F5] no-print">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-baseline gap-2">
+          <Link href="/" className="flex items-baseline gap-2 group">
             <span className="font-[family-name:var(--font-cormorant)] text-xl italic font-light tracking-[0.2em]"
               style={{ background: GRAD, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               stillwater
             </span>
-            <span className="text-[9px] tracking-[0.3em] uppercase text-[#A090C0]">care plan</span>
+            <span className="text-[9px] tracking-[0.3em] uppercase text-[#A090C0] group-hover:text-[#8070A8] transition-colors">care plan</span>
           </Link>
           <button onClick={() => window.print()}
-            className="px-5 py-2 rounded-full text-xs font-medium text-white transition-all hover:-translate-y-0.5"
-            style={{ background: GRAD, boxShadow: '0 3px 12px rgba(91,141,239,0.25)' }}>
+            className="btn-primary btn-sm">
             Print / Save PDF
           </button>
         </div>
       </nav>
 
-      <div className="pt-16 max-w-4xl mx-auto px-6 py-10">
+      <div className="pt-16 max-w-4xl mx-auto px-6 py-10 relative z-10">
 
         {/* View-only notice */}
-        <div className="rounded-2xl p-4 mb-8 flex gap-3 items-center no-print"
-          style={{ background: '#EBF2FF', border: '1px solid #BDD0FF' }}>
-          <svg className="w-4 h-4 text-[#5B8DEF] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          <p className="text-xs text-[#3A6090]">
-            This is a <strong>view-only</strong> shared plan. It was shared privately and is not connected to any account.
+        <div className="rounded-2xl p-4 mb-8 flex gap-3 items-center no-print animate-fade-up"
+          style={{ background: 'linear-gradient(135deg, #EBF2FF, #EDE8FF)', border: '1px solid #C0D0F8', animationDelay: '60ms' }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#D0E0FF' }}>
+            <svg className="w-3.5 h-3.5 text-[#5B8DEF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <p className="text-xs text-[#3A4890] leading-relaxed">
+            <strong>View-only snapshot.</strong> Shared privately — not connected to any account. Print or save as PDF using the button above.
           </p>
         </div>
 
         {/* Document header */}
-        <div className="text-center py-10 rounded-3xl mb-8"
-          style={{ background: 'linear-gradient(135deg, #EBF2FF, #EDE8FF, #FDE8EF)', border: '1px solid rgba(155,92,175,0.14)' }}>
-          <p className="text-[10px] tracking-[0.5em] uppercase text-[#8070A8] mb-3">Minnesota Health Care Directive</p>
-          <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light text-[#1A1030] mb-2">Advance Care Plan</h1>
-          {plan.name && <p className="font-[family-name:var(--font-cormorant)] text-2xl font-light text-[#4A3870] mb-2">{plan.name}</p>}
-          <p className="text-xs text-[#8070A8]">Shared via Stillwater · {date}</p>
+        <div className="relative overflow-hidden text-center py-12 rounded-3xl mb-8 animate-fade-up"
+          style={{ background: 'linear-gradient(135deg, #EBF2FF 0%, #EDE8FF 50%, #FDE8EF 100%)', border: '1px solid rgba(155,92,175,0.14)', boxShadow: '0 4px 28px rgba(91,141,239,0.08)' }}>
+          <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-20 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)', animation: 'float-a 18s ease-in-out infinite' }} />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full opacity-15 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #F5C0DC, transparent 70%)', animation: 'float-b 23s ease-in-out infinite' }} />
+          <p className="relative text-[10px] tracking-[0.55em] uppercase text-[#8070A8] mb-4">Minnesota Health Care Directive</p>
+          <h1 className="relative font-[family-name:var(--font-cormorant)] text-5xl md:text-6xl font-light text-[#1A1030] mb-3">Advance Care Plan</h1>
+          {plan.name && <p className="relative font-[family-name:var(--font-cormorant)] text-2xl font-light text-[#4A3870] mb-3">{plan.name}</p>}
+          <div className="relative flex items-center justify-center gap-3">
+            <div className="h-px w-12 opacity-30" style={{ background: '#9B5CAF' }} />
+            <p className="text-xs text-[#8070A8] tracking-widest">Shared via Stillwater · {date}</p>
+            <div className="h-px w-12 opacity-30" style={{ background: '#9B5CAF' }} />
+          </div>
         </div>
 
         {/* Section I: Proxy */}

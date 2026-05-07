@@ -321,6 +321,55 @@ body {
   animation: feat-shimmer 0.7s ease forwards;
 }
 
+/* ── Dark mode ── */
+html.dark body {
+  background: #0D0818;
+  color: #F0EBF8;
+}
+html.dark .bg-white {
+  background: #180F28 !important;
+}
+html.dark .bg-\[\#FAF8FF\] {
+  background: #0D0818 !important;
+}
+html.dark nav {
+  background: rgba(13,8,24,0.92) !important;
+  border-bottom-color: #2A1E42 !important;
+}
+html.dark .border-\[\#E0D8F5\] {
+  border-color: #2A1E42 !important;
+}
+html.dark .border-\[\#EDE8FF\] {
+  border-color: #2A1E42 !important;
+}
+html.dark .text-\[\#1A1030\] {
+  color: #F0EBF8 !important;
+}
+html.dark .text-\[\#4A3870\] {
+  color: #C4B0E8 !important;
+}
+html.dark .text-\[\#2E1A60\] {
+  color: #EDE8FF !important;
+}
+html.dark .text-\[\#8070A8\] {
+  color: #8878C0 !important;
+}
+html.dark .text-\[\#A090C0\] {
+  color: #7868B0 !important;
+}
+html.dark .min-h-screen {
+  background: #0D0818;
+}
+html.dark input,
+html.dark textarea {
+  color: #F0EBF8 !important;
+  background: transparent;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #4A3870 !important;
+}
+
 /* ── Legacy (kept for reference) ── */
 @keyframes orbit-blue {
   from { transform: rotate(0deg) translateX(80px); }

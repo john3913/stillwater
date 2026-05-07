@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import EmailForm from './EmailForm';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 
 const coverItems: { label: string; bg: string; border: string; iconColor: string; iconPath: string }[] = [
@@ -30,9 +31,10 @@ export default function Home() {
             </span>
             <span className="text-[10px] tracking-[0.32em] text-[#A090C0] uppercase">care plan</span>
           </Link>
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <a href="#features" className="hidden md:block text-sm text-[#8070A8] hover:text-[#4A3870] transition-colors tracking-wide">Features</a>
             <a href="#how" className="hidden md:block text-sm text-[#8070A8] hover:text-[#4A3870] transition-colors tracking-wide">How it works</a>
+            <ThemeToggle />
             <Link href="/plan" className="btn-primary btn-sm">Begin your plan</Link>
           </div>
         </div>

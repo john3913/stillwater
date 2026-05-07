@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
 
@@ -137,11 +138,12 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
               care plan
             </span>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link href="/plan"
               className="text-[11px] text-[#8070A8] hover:text-[#4A3870] tracking-[0.24em] uppercase transition-colors font-medium">
               Your Plan
             </Link>
+            <ThemeToggle />
             {loaded && profiles.length > 0 && (
               <ProfileSwitcher
                 profiles={profiles}

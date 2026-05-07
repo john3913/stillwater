@@ -127,6 +127,7 @@ export function usePlan() {
     });
   }, [activeId]);
 
+  const touchPlan        = useCallback(() => persist(plan),                                             [plan, persist]);
   const saveName         = useCallback((n: string)             => persist({ ...plan, name: n }),         [plan, persist]);
   const saveWishes       = useCallback((w: WishesData)         => persist({ ...plan, wishes: w }),       [plan, persist]);
   const saveProxy        = useCallback((p: ProxyData)          => persist({ ...plan, proxy: p }),        [plan, persist]);
@@ -211,7 +212,7 @@ export function usePlan() {
     plan, loaded,
     profiles, activeId, activeProfileName, lastEdited,
     switchProfile, createNewProfile, deleteProfile, renameProfile,
-    saveName, saveWishes, saveProxy, saveValues, saveLetter, deleteLetter,
+    touchPlan, saveName, saveWishes, saveProxy, saveValues, saveLetter, deleteLetter,
     saveArrangements, saveDocuments, saveProxyAndPrincipal, saveLegacy,
     saveMedical, saveVault, saveGifts,
     addDistributionEntry, updateDistributionEntry, removeDistributionEntry,
