@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import EmailForm from './EmailForm';
 
-// Blue → Lavender → Rose gradient system
-const ringColors = ['#B8CAFF', '#C8B4F2', '#DDD0FF', '#F0B8D8', '#FFD0EA'];
-
 const covers = [
   'Medical treatment preferences',
   'Healthcare proxy designation',
@@ -67,7 +64,7 @@ export default function Home() {
 
         <div className="relative max-w-6xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-[10px] tracking-[0.55em] uppercase mb-8 font-medium text-[#8070A8]">End of life planning</p>
+            <p className="text-[10px] tracking-[0.55em] uppercase mb-8 font-medium text-[#8070A8]">Planning ahead, with love</p>
             <h1 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-[5rem] font-light leading-[1.04] mb-8 bg-gradient-to-br from-[#4478E0] via-[#9050C0] to-[#C47090] bg-clip-text text-transparent">
               Plan with peace.<br />
               <em className="font-light">Leave with love.</em>
@@ -83,38 +80,71 @@ export default function Home() {
             <p className="text-[10px] text-[#A090C0] mt-7 tracking-widest uppercase">Free · Private · No account needed</p>
           </div>
 
-          {/* Concentric rings — blue → lavender → rose */}
+          {/* Animated water waves graphic */}
           <div className="hidden md:flex items-center justify-center">
-            <div className="relative w-80 h-80" style={{ animation: 'rings-breathe 9s ease-in-out infinite' }}>
-              {ringColors.map((color, i) => (
-                <div key={i} className="absolute inset-0 rounded-full"
-                  style={{
-                    border: `${i === 0 ? 2 : 1.5}px solid ${color}`,
-                    transform: `scale(${0.22 + i * 0.195}) rotate(${i * 4}deg)`,
-                    opacity: 1 - i * 0.055,
-                  }}
-                />
-              ))}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(135deg, #EBF2FF 0%, #EDE8FF 50%, #FDE8EF 100%)',
-                    border: '1.5px solid #C4D0F0',
-                    boxShadow: '0 0 48px rgba(91,141,239,0.14), 0 4px 24px rgba(155,92,175,0.1)',
-                  }}>
-                  <svg className="w-10 h-10" fill="none" stroke="url(#hero-heart)" viewBox="0 0 24 24">
-                    <defs>
-                      <linearGradient id="hero-heart" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#5B8DEF" />
-                        <stop offset="50%" stopColor="#9B5CAF" />
-                        <stop offset="100%" stopColor="#C47090" />
-                      </linearGradient>
-                    </defs>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.3}
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </div>
-              </div>
+            <div className="relative overflow-hidden" style={{ width: 440, height: 340, borderRadius: 32 }}>
+
+              {/* Sky gradient background */}
+              <div className="absolute inset-0" style={{
+                background: 'linear-gradient(180deg, #EBF2FF 0%, #EEE8FF 38%, #F5E4F8 62%, #EDF6F2 100%)',
+              }} />
+
+              {/* Floating particles */}
+              <svg className="absolute inset-0" width="440" height="340" style={{ pointerEvents: 'none' }}>
+                {([[60,55],[200,38],[360,70],[130,130],[300,110],[400,170],[80,190]] as [number,number][]).map(([cx,cy],i) => (
+                  <circle key={i} cx={cx} cy={cy} r="1.5" fill="#C4B0E8">
+                    <animate attributeName="opacity" values="0.1;0.45;0.1"
+                      dur={`${4.5 + i * 1.1}s`} begin={`${i * 0.7}s`} repeatCount="indefinite" />
+                    <animateTransform attributeName="transform" type="translate"
+                      values="0,0; 3,-5; 0,0" dur={`${6 + i}s`} begin={`${i * 0.5}s`} repeatCount="indefinite" />
+                  </circle>
+                ))}
+              </svg>
+
+              {/* Wave layers — 880px wide SVG scrolled in 440px container */}
+              <svg style={{ position: 'absolute', bottom: 0, left: 0 }}
+                width="880" height="260">
+
+                {/* Wave 4 — sage, deepest */}
+                <g opacity="0.13">
+                  <animateTransform attributeName="transform" type="translate"
+                    from="0,0" to="-440,0" dur="32s" repeatCount="indefinite" />
+                  <path fill="#7AB8A0"
+                    d="M0,100 q110,-55 220,0 q110,55 220,0 q110,-55 220,0 q110,55 220,0 L880,260 L0,260 Z" />
+                </g>
+
+                {/* Wave 3 — violet, opposite direction */}
+                <g opacity="0.17">
+                  <animateTransform attributeName="transform" type="translate"
+                    from="-440,0" to="0,0" dur="24s" repeatCount="indefinite" />
+                  <path fill="#9B5CAF"
+                    d="M0,130 q110,-44 220,0 q110,44 220,0 q110,-44 220,0 q110,44 220,0 L880,260 L0,260 Z" />
+                </g>
+
+                {/* Wave 2 — blush */}
+                <g opacity="0.19">
+                  <animateTransform attributeName="transform" type="translate"
+                    from="0,0" to="-440,0" dur="18s" repeatCount="indefinite" />
+                  <path fill="#C47090"
+                    d="M0,162 q110,-32 220,0 q110,32 220,0 q110,-32 220,0 q110,32 220,0 L880,260 L0,260 Z" />
+                </g>
+
+                {/* Wave 1 — blue, front, opposite direction */}
+                <g opacity="0.28">
+                  <animateTransform attributeName="transform" type="translate"
+                    from="-440,0" to="0,0" dur="14s" repeatCount="indefinite" />
+                  <path fill="#5B8DEF"
+                    d="M0,196 q110,-24 220,0 q110,24 220,0 q110,-24 220,0 q110,24 220,0 L880,260 L0,260 Z" />
+                </g>
+              </svg>
+
+              {/* Soft top fade */}
+              <div className="absolute top-0 left-0 right-0 h-28 pointer-events-none"
+                style={{ background: 'linear-gradient(to bottom, rgba(235,242,255,0.7), transparent)' }} />
+
+              {/* Bottom shimmer highlight on waves */}
+              <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.18), transparent)' }} />
             </div>
           </div>
         </div>
@@ -249,18 +279,46 @@ export default function Home() {
       </section>
 
       {/* ── Trust strip ── */}
-      <section className="py-14 border-y border-[#E0D8F5] bg-[#FAF8FF]">
+      <section className="py-16 border-y border-[#E0D8F5]"
+        style={{ background: 'linear-gradient(135deg, #FAF8FF 0%, #F5F0FF 50%, #FAF8FF 100%)' }}>
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-wrap justify-center gap-10 md:gap-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Private & on-device', color: '#5B8DEF' },
-              { label: 'Free to start', color: '#9B5CAF' },
-              { label: 'Guided at your pace', color: '#C47090' },
-              { label: 'Legally informed (MN)', color: '#5E9E7E' },
-            ].map(({ label, color }) => (
-              <div key={label} className="flex items-center gap-2.5 text-sm tracking-wide text-[#4A3870]">
-                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
-                {label}
+              {
+                label: 'Private & on-device',
+                desc: 'Your data never leaves this device',
+                color: '#5B8DEF', bg: '#EBF2FF', border: '#C0D4FF',
+                icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>,
+              },
+              {
+                label: 'Free to start',
+                desc: 'No credit card or account needed',
+                color: '#9B5CAF', bg: '#EDE8FF', border: '#C8B8F0',
+                icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>,
+              },
+              {
+                label: 'Guided at your pace',
+                desc: 'Return anytime, no pressure at all',
+                color: '#C47090', bg: '#FDE8EF', border: '#F0BAD0',
+                icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+              },
+              {
+                label: 'Legally informed (MN)',
+                desc: 'Aligned with Minnesota law',
+                color: '#5E9E7E', bg: '#E8F5EE', border: '#B8DFC8',
+                icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>,
+              },
+            ].map(item => (
+              <div key={item.label} className="rounded-2xl p-5 flex flex-col gap-3"
+                style={{ background: item.bg, border: `1px solid ${item.border}` }}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.75)', color: item.color, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-[#1A1030] leading-snug">{item.label}</p>
+                  <p className="text-[11px] leading-relaxed mt-1" style={{ color: item.color, opacity: 0.8 }}>{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -303,7 +361,7 @@ export default function Home() {
             </span>
             <span className="text-[9px] tracking-[0.3em] uppercase text-[#A090C0]">care plan</span>
           </Link>
-          <p className="text-[#8070A8] text-xs tracking-wider">End of life planning, with grace and clarity.</p>
+          <p className="text-[#8070A8] text-xs tracking-wider">Planning ahead, with love and clarity.</p>
           <div className="flex gap-6 text-xs text-[#8070A8] tracking-wide">
             <a href="#" className="hover:text-[#4A3870] transition-colors">Privacy</a>
             <a href="#" className="hover:text-[#4A3870] transition-colors">Terms</a>

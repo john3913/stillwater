@@ -20,7 +20,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Stillwater — End of life planning, with grace and clarity",
+  title: "Stillwater — Planning ahead, with love",
   description:
     "Stillwater helps you document your wishes, guide your loved ones, and leave a legacy of clarity and love.",
 };
