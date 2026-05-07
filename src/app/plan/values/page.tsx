@@ -103,16 +103,22 @@ export default function ValuesPage() {
 
   if (saved) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: '#E8F5EE' }}>
-          <svg className="w-8 h-8 text-[#5E9E7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-fade-up">
+        <div className="relative mb-8">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #5E9E7E, #7AAE8E)', boxShadow: '0 8px 36px rgba(94,158,126,0.32)' }}>
+            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div className="absolute inset-0 rounded-full opacity-30 pointer-events-none"
+            style={{ background: 'linear-gradient(135deg, #5E9E7E, #7AAE8E)', filter: 'blur(18px)', transform: 'scale(1.3)' }} />
         </div>
-        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light mb-3"
+          style={{ background: 'linear-gradient(135deg, #5E9E7E 0%, #3E8868 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
           Your values are saved.
         </h2>
-        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-8">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-10" style={{ opacity: 0.8 }}>
           These words will help your care team and loved ones understand what truly matters to you.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-xs">

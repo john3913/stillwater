@@ -7,6 +7,7 @@ import { usePlan } from '@/hooks/usePlan';
 import type { WishesData } from '@/lib/planTypes';
 
 const P = '#7C5CAF';
+const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
 
 type Step = {
   id: keyof Pick<WishesData, 'cpr' | 'ventilator' | 'dialysis' | 'feedingTube' | 'setting' | 'painPriority' | 'organDonation'>;
@@ -102,20 +103,38 @@ function ChoiceCard({ option, selected, onSelect }: {
   option: Step['options'][number]; selected: boolean; onSelect: () => void;
 }) {
   return (
-    <button onClick={onSelect} className="w-full text-left p-5 rounded-2xl border-2 transition-all duration-150"
+    <button onClick={onSelect} className="w-full text-left rounded-2xl transition-all duration-200"
       style={selected
-        ? { borderColor: P, background: '#F5F0FF' }
-        : { borderColor: '#E0D8F5', background: 'white' }}>
-      <div className="flex items-start gap-4">
-        <div className="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors"
-          style={selected ? { borderColor: P, background: P } : { borderColor: '#C4B0E8' }}>
-          {selected && <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 12 12">
-            <path d="M10 3L5 8.5 2 5.5l-1 1L5 10.5l6-7-1-0.5z" />
-          </svg>}
+        ? { border: `2px solid ${P}`, background: 'linear-gradient(135deg, #F5F0FF 0%, #FAFAFF 100%)', boxShadow: `0 4px 22px ${P}1A` }
+        : { border: '1.5px solid #E0D8F5', background: 'white' }}
+      onMouseEnter={e => {
+        if (selected) return;
+        const el = e.currentTarget as HTMLElement;
+        el.style.border = '1.5px solid #C4B0E8';
+        el.style.boxShadow = '0 3px 16px rgba(90,62,138,0.09)';
+        el.style.transform = 'translateY(-1px)';
+      }}
+      onMouseLeave={e => {
+        if (selected) return;
+        const el = e.currentTarget as HTMLElement;
+        el.style.border = '1.5px solid #E0D8F5';
+        el.style.boxShadow = 'none';
+        el.style.transform = 'translateY(0)';
+      }}>
+      <div className="flex items-start gap-4 p-5">
+        <div className="mt-0.5 w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center transition-all duration-200"
+          style={selected
+            ? { border: `2px solid ${P}`, background: P, boxShadow: `0 0 0 3px ${P}22` }
+            : { border: '2px solid #C4B0E8', background: 'white' }}>
+          {selected && (
+            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            </svg>
+          )}
         </div>
-        <div>
-          <p className="font-medium text-sm" style={{ color: selected ? '#2E1A60' : '#1A1030' }}>{option.label}</p>
-          <p className="text-xs mt-1 leading-relaxed" style={{ color: selected ? P : '#8070A8' }}>{option.description}</p>
+        <div className="flex-1">
+          <p className="font-semibold text-sm leading-snug" style={{ color: selected ? '#2E1A60' : '#1A1030' }}>{option.label}</p>
+          <p className="text-xs mt-1.5 leading-relaxed" style={{ color: selected ? '#6050A8' : '#8070A8' }}>{option.description}</p>
         </div>
       </div>
     </button>
@@ -164,16 +183,22 @@ export default function WishesPage() {
 
   if (saved) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: '#EDE8FF' }}>
-          <svg className="w-8 h-8 text-[#7C5CAF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-fade-up">
+        <div className="relative mb-8">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: GRAD, boxShadow: '0 8px 36px rgba(91,141,239,0.32)' }}>
+            <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div className="absolute inset-0 rounded-full opacity-30 pointer-events-none"
+            style={{ background: GRAD, filter: 'blur(18px)', transform: 'scale(1.3)' }} />
         </div>
-        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light mb-3"
+          style={{ background: GRAD, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
           Your wishes are saved.
         </h2>
-        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-8">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-10" style={{ opacity: 0.8 }}>
           These answers will guide your care team and your loved ones. You can return and update them anytime.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-xs">
@@ -195,23 +220,26 @@ export default function WishesPage() {
       <div className="mb-10">
         <div className="flex items-center justify-between mb-3">
           <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
-          <span className="text-xs text-[#8070A8] tracking-wider">{stepIndex + 1} of {steps.length}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium tracking-wide" style={{ color: P }}>{step.tag}</span>
+            <span className="text-[#D4CAE8] text-xs">·</span>
+            <span className="text-xs text-[#A090C0]">{stepIndex + 1} / {steps.length}</span>
+          </div>
         </div>
-        <div className="h-1 rounded-full overflow-hidden" style={{ background: '#EDE8FF' }}>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#EDE8FF' }}>
           <div className="h-full rounded-full transition-all duration-500"
-            style={{ width: `${progress}%`, background: 'linear-gradient(to right, #9B68D0, #C47090)' }} />
+            style={{ width: `${progress}%`, background: 'linear-gradient(to right, #7C5CAF, #C47090)' }} />
         </div>
       </div>
 
-      <div className="mb-10">
-        <p className="text-xs tracking-[0.3em] text-[#7C5CAF] uppercase mb-4">{step.tag}</p>
+      <div className="mb-10 animate-fade-up">
         <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] leading-tight mb-5">
           {step.question}
         </h2>
-        <p className="text-[#4A3870] text-sm leading-relaxed rounded-2xl p-4 opacity-80"
-          style={{ background: '#F5F0FF', border: '1px solid #E0D8F5' }}>
-          {step.context}
-        </p>
+        <div className="flex gap-3 rounded-2xl p-4" style={{ background: '#F5F0FF', border: '1px solid #E0D8F5' }}>
+          <div className="w-0.5 rounded-full shrink-0 self-stretch" style={{ background: 'linear-gradient(to bottom, #C4B0E8, #E0D8F5)' }} />
+          <p className="text-[#5040A0] text-sm leading-relaxed" style={{ opacity: 0.82 }}>{step.context}</p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 mb-8">
@@ -259,10 +287,8 @@ export default function WishesPage() {
           ← {stepIndex === 0 ? 'Back to plan' : 'Previous'}
         </button>
         <button onClick={next} disabled={!current}
-          className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all"
-          style={current
-            ? { background: '#7C5CAF', color: 'white' }
-            : { background: '#EDE8FF', color: '#8070A8', cursor: 'not-allowed' }}>
+          className={current ? 'btn-primary btn-sm' : 'px-7 py-3 rounded-full text-sm font-medium tracking-wide'}
+          style={current ? {} : { background: '#EDE8FF', color: '#8070A8', cursor: 'not-allowed' }}>
           {isLast ? 'Save my wishes' : 'Next →'}
         </button>
       </div>
