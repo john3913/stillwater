@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 import type { ValuesData, ScenarioRating } from '@/lib/planTypes';
+import AIDraftButton from '@/components/AIDraftButton';
 
 const P = '#5E9E7E';
 const IMPORTANCE = ['Not at all', 'Slightly', 'Moderately', 'Very', 'Extremely'];
@@ -23,9 +24,9 @@ function ChoiceCard({ label, description, selected, onSelect }: {
   );
 }
 
-function Prompt({ label, hint, value, onChange, placeholder, rows = 4 }: {
+function Prompt({ label, hint, value, onChange, placeholder, rows = 4, aiPrompt }: {
   label: string; hint?: string; value: string;
-  onChange: (v: string) => void; placeholder: string; rows?: number;
+  onChange: (v: string) => void; placeholder: string; rows?: number; aiPrompt?: string;
 }) {
   return (
     <div>
@@ -41,6 +42,7 @@ function Prompt({ label, hint, value, onChange, placeholder, rows = 4 }: {
         value={value}
         onChange={e => onChange(e.target.value)}
       />
+      {aiPrompt && <AIDraftButton prompt={aiPrompt} onAccept={onChange} accentColor="#5E9E7E" />}
     </div>
   );
 }
@@ -95,7 +97,6 @@ export default function ValuesPage() {
   const handleSave = () => {
     saveValues(form);
     setSaved(true);
-    setTimeout(() => router.push('/plan'), 1600);
   };
 
   if (!loaded) return null;
@@ -111,9 +112,19 @@ export default function ValuesPage() {
         <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
           Your values are saved.
         </h2>
-        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-8">
           These words will help your care team and loved ones understand what truly matters to you.
         </p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <Link href="/plan/letters"
+            className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white text-center transition-all hover:-translate-y-0.5"
+            style={{ background: '#C08858', boxShadow: '0 4px 18px rgba(192,136,88,0.3)' }}>
+            Next: Write letters to loved ones →
+          </Link>
+          <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors py-2">
+            Back to plan overview
+          </Link>
+        </div>
       </div>
     );
   }
@@ -142,6 +153,7 @@ export default function ValuesPage() {
             value={form.whatMatters}
             onChange={set('whatMatters')}
             rows={5}
+            aiPrompt="Write 2-4 sincere sentences for someone's healthcare directive about what matters most to them in life — the relationships, experiences, and qualities that make their life feel meaningful and worth living. Write in first person."
           />
         </div>
 
@@ -219,6 +231,7 @@ export default function ValuesPage() {
             placeholder="e.g. I fear being kept alive without awareness, or being a burden to my children, or dying in pain and alone."
             value={form.biggestFear}
             onChange={set('biggestFear')}
+            aiPrompt="Write 2-3 honest, specific sentences for a healthcare directive about what someone fears most regarding serious illness or dying — things like loss of dignity, being a burden, dying alone, or prolonged suffering. Write in first person, sincerely."
           />
           <Prompt
             label="What do you hope for?"
@@ -226,6 +239,7 @@ export default function ValuesPage() {
             placeholder="e.g. I hope to be conscious enough to say goodbye, to have music playing, to not be in pain, and to feel loved."
             value={form.biggestHope}
             onChange={set('biggestHope')}
+            aiPrompt="Write 2-3 sentences for a healthcare directive expressing what someone hopes for at the end of life — what a peaceful, meaningful death would look and feel like. Include things like presence of loved ones, comfort, consciousness, or dignity. Write in first person."
           />
         </div>
 

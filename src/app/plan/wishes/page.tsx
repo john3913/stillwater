@@ -152,7 +152,6 @@ export default function WishesPage() {
     if (isLast) {
       saveWishes({ ...answers, organDonationNotes: donationNotes, additionalNotes });
       setSaved(true);
-      setTimeout(() => router.push('/plan'), 1800);
     } else {
       setStepIndex(i => i + 1);
     }
@@ -174,9 +173,19 @@ export default function WishesPage() {
         <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
           Your wishes are saved.
         </h2>
-        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-8">
           These answers will guide your care team and your loved ones. You can return and update them anytime.
         </p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <Link href="/plan/proxy"
+            className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white text-center transition-all hover:-translate-y-0.5"
+            style={{ background: '#C47090', boxShadow: '0 4px 18px rgba(196,112,144,0.3)' }}>
+            Next: Name your proxy →
+          </Link>
+          <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors py-2">
+            Back to plan overview
+          </Link>
+        </div>
       </div>
     );
   }

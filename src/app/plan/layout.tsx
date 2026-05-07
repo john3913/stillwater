@@ -181,9 +181,9 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
                         )}
                       </div>
                       {/* Label */}
-                      <span className="text-[9px] font-medium leading-none transition-colors duration-300 hidden sm:block"
+                      <span className="text-[9px] font-medium leading-none transition-colors duration-300 hidden sm:block whitespace-nowrap"
                         style={{ color: done || started ? s.color : '#C4B8D8' }}>
-                        {s.short}
+                        {s.label}
                       </span>
                     </Link>
 

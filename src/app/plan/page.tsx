@@ -73,28 +73,30 @@ function ToolCard({ href, iconBg, iconColor, label, sub, icon }: {
 }) {
   return (
     <Link href={href}
-      className="group flex items-center gap-4 bg-white rounded-2xl p-4 transition-all hover:-translate-y-0.5"
+      className="group flex flex-col gap-4 bg-white rounded-2xl p-5 transition-all hover:-translate-y-0.5"
       style={{ border: '1px solid #E8E0F5', boxShadow: '0 1px 4px rgba(90,62,138,0.05)' }}
       onMouseEnter={e => {
         (e.currentTarget as HTMLElement).style.borderColor = '#C4B0E8';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(90,62,138,0.1)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(90,62,138,0.1)';
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.borderColor = '#E8E0F5';
         (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(90,62,138,0.05)';
       }}>
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
         style={{ background: iconBg, color: iconColor }}>
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#1A1030] group-hover:text-[#2E1A60] transition-colors">{label}</p>
-        <p className="text-xs text-[#A090C0] mt-0.5 leading-snug">{sub}</p>
+        <p className="text-sm font-semibold text-[#1A1030] group-hover:text-[#2E1A60] transition-colors leading-snug">{label}</p>
+        <p className="text-xs text-[#A090C0] mt-1 leading-snug">{sub}</p>
       </div>
-      <svg className="w-4 h-4 text-[#C4B0E8] shrink-0 transition-all duration-200 group-hover:text-[#8070A8] group-hover:translate-x-0.5"
-        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-      </svg>
+      <div className="flex items-center gap-1 text-xs font-medium transition-colors" style={{ color: iconColor }}>
+        Open
+        <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
     </Link>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 import type { Letter } from '@/lib/planTypes';
+import AIDraftButton from '@/components/AIDraftButton';
 
 const WHEN_LABELS: Record<Letter['deliverWhen'], string> = {
   death: 'To be read after I pass',
@@ -110,6 +111,11 @@ function LetterEditor({ initial, onSave, onCancel }: {
               placeholder="Begin your letter here. Take your time. There are no wrong words."
               value={body}
               onChange={e => setBody(e.target.value)}
+            />
+            <AIDraftButton
+              prompt={`Write a heartfelt letter opening for someone writing a personal message${to ? ` to their ${to}` : ' to a loved one'} for their end-of-life plan. It should express love, gratitude, and what this person means to them. Keep it 3-5 sentences — warm, personal, and from the heart. Write in first person.`}
+              onAccept={text => setBody(prev => prev ? prev + '\n\n' + text : text)}
+              accentColor="#7C5CAF"
             />
           </div>
 
@@ -220,7 +226,7 @@ export default function LettersPage() {
           <p className="font-[family-name:var(--font-cormorant)] text-3xl font-light text-[#C4B0E8] mb-3">
             No letters yet
           </p>
-          <p className="text-[#8070A8] text-sm mb-8">Your first letter is the hardest. It doesn't have to be perfect.</p>
+          <p className="text-[#8070A8] text-sm mb-8">Your first letter is the hardest. It doesn&apos;t have to be perfect.</p>
           <button onClick={() => setEditing('new')}
             className="px-6 py-3 rounded-full text-sm font-medium transition-colors"
             style={{ background: '#7C5CAF', color: 'white' }}
@@ -243,6 +249,18 @@ export default function LettersPage() {
           </button>
         </div>
       )}
+
+      {/* Continue navigation */}
+      <div className="mt-12 pt-8 flex items-center justify-between" style={{ borderTop: '1px solid #E0D8F5' }}>
+        <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">
+          ← Back to plan
+        </Link>
+        <Link href="/plan/arrangements"
+          className="px-6 py-3 rounded-2xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
+          style={{ background: '#9B68D0', boxShadow: '0 4px 18px rgba(155,104,208,0.28)' }}>
+          Next: Final arrangements →
+        </Link>
+      </div>
     </div>
   );
 }

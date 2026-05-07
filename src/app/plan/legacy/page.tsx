@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 import type { LegacyData } from '@/lib/planTypes';
+import AIDraftButton from '@/components/AIDraftButton';
 
 const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
 
@@ -84,6 +85,11 @@ function LegacyField({
         style={{ border: '1px solid #E0D8F5', background: '#FAFAFF', color: '#1A1030' }}
         onFocus={e => (e.target.style.borderColor = '#A090D8')}
         onBlur={e => (e.target.style.borderColor = '#E0D8F5')}
+      />
+      <AIDraftButton
+        prompt={`Write a thoughtful, sincere personal reflection for a legacy document in response to: "${field.prompt}" Keep it 2-4 sentences, written in first person, from the heart. ${field.hint}`}
+        onAccept={onChange}
+        accentColor="#9B68D0"
       />
     </div>
   );

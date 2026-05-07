@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
 import type { ProxyData, AdditionalPowers } from '@/lib/planTypes';
@@ -46,7 +45,6 @@ function PowerCheck({ label, description, checked, onToggle }: {
 }
 
 export default function ProxyPage() {
-  const router = useRouter();
   const { plan, loaded, saveProxyAndPrincipal } = usePlan();
   const [form, setForm] = useState<ProxyData>(plan.proxy);
   const [dob, setDob] = useState(plan.principalDOB);
@@ -83,7 +81,6 @@ export default function ProxyPage() {
       principalAltPhone: altPhone,
     });
     setSaved(true);
-    setTimeout(() => router.push('/plan'), 1600);
   };
 
   if (!loaded) return null;
@@ -99,9 +96,19 @@ export default function ProxyPage() {
         <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-[#1A1030] mb-3">
           Your proxy is saved.
         </h2>
-        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed">
+        <p className="text-[#4A3870] text-sm max-w-xs leading-relaxed mb-8">
           Make sure {form.primaryName || 'your proxy'} knows they hold this role — and what your wishes are.
         </p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <Link href="/plan/values"
+            className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white text-center transition-all hover:-translate-y-0.5"
+            style={{ background: '#5E9E7E', boxShadow: '0 4px 18px rgba(94,158,126,0.3)' }}>
+            Next: Share your values →
+          </Link>
+          <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors py-2">
+            Back to plan overview
+          </Link>
+        </div>
       </div>
     );
   }

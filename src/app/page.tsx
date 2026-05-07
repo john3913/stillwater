@@ -55,103 +55,69 @@ export default function Home() {
         <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #EBF2FF 0%, #F0E8FF 35%, #FFE8F4 65%, #EDF8F5 100%)' }} />
 
         {/* Floating orbs */}
-        <div className="absolute top-10 right-[-80px] w-[560px] h-[560px] rounded-full blur-3xl pointer-events-none opacity-55"
+        <div className="absolute top-10 right-[-80px] w-[560px] h-[560px] rounded-full blur-3xl pointer-events-none opacity-45"
           style={{ background: '#C0D4FF', animation: 'drift-1 22s ease-in-out infinite' }} />
-        <div className="absolute bottom-[-40px] left-[-100px] w-[480px] h-[480px] rounded-full blur-3xl pointer-events-none opacity-50"
+        <div className="absolute bottom-[200px] left-[-100px] w-[480px] h-[480px] rounded-full blur-3xl pointer-events-none opacity-40"
           style={{ background: '#F5C0D8', animation: 'drift-2 28s ease-in-out infinite' }} />
-        <div className="absolute top-1/3 left-1/3 w-[380px] h-[380px] rounded-full blur-3xl pointer-events-none opacity-35"
+        <div className="absolute top-1/3 left-1/3 w-[380px] h-[380px] rounded-full blur-3xl pointer-events-none opacity-28"
           style={{ background: '#DDD0FF', animation: 'drift-3 19s ease-in-out infinite' }} />
 
-        <div className="relative max-w-6xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-[10px] tracking-[0.55em] uppercase mb-8 font-medium text-[#8070A8]">Planning ahead, with love</p>
-            <h1 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-[5rem] font-light leading-[1.04] mb-8 bg-gradient-to-br from-[#4478E0] via-[#9050C0] to-[#C47090] bg-clip-text text-transparent">
-              Plan with peace.<br />
-              <em className="font-light">Leave with love.</em>
-            </h1>
-            <p className="text-[#4A3870] text-lg leading-relaxed mb-12 max-w-md" style={{ opacity: 0.75 }}>
-              Stillwater helps you document your wishes, guide your loved ones,
-              and leave a legacy of clarity — so those you love are never left wondering.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/plan" className="btn-primary">Begin your plan →</Link>
-              <a href="#how" className="btn-secondary">See how it works</a>
-            </div>
-            <p className="text-[10px] text-[#A090C0] mt-7 tracking-widest uppercase">Free · Private · No account needed</p>
+        {/* Centered content */}
+        <div className="relative z-10 max-w-3xl mx-auto px-6 py-32 text-center">
+          <p className="text-[10px] tracking-[0.55em] uppercase mb-8 font-medium text-[#8070A8]">Planning ahead, with love</p>
+          <h1 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-[5.5rem] font-light leading-[1.04] mb-8 bg-gradient-to-br from-[#4478E0] via-[#9050C0] to-[#C47090] bg-clip-text text-transparent">
+            Plan with peace.<br />
+            <em className="font-light">Leave with love.</em>
+          </h1>
+          <p className="text-[#4A3870] text-lg leading-relaxed mb-12 max-w-xl mx-auto" style={{ opacity: 0.75 }}>
+            Stillwater helps you document your wishes, guide your loved ones,
+            and leave a legacy of clarity — so those you love are never left wondering.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/plan" className="btn-primary">Begin your plan →</Link>
+            <a href="#how" className="btn-secondary">See how it works</a>
           </div>
-
-          {/* Animated water waves graphic */}
-          <div className="hidden md:flex items-center justify-center">
-            <div className="relative overflow-hidden" style={{ width: 440, height: 340, borderRadius: 32 }}>
-
-              {/* Sky gradient background */}
-              <div className="absolute inset-0" style={{
-                background: 'linear-gradient(180deg, #EBF2FF 0%, #EEE8FF 38%, #F5E4F8 62%, #EDF6F2 100%)',
-              }} />
-
-              {/* Floating particles */}
-              <svg className="absolute inset-0" width="440" height="340" style={{ pointerEvents: 'none' }}>
-                {([[60,55],[200,38],[360,70],[130,130],[300,110],[400,170],[80,190]] as [number,number][]).map(([cx,cy],i) => (
-                  <circle key={i} cx={cx} cy={cy} r="1.5" fill="#C4B0E8">
-                    <animate attributeName="opacity" values="0.1;0.45;0.1"
-                      dur={`${4.5 + i * 1.1}s`} begin={`${i * 0.7}s`} repeatCount="indefinite" />
-                    <animateTransform attributeName="transform" type="translate"
-                      values="0,0; 3,-5; 0,0" dur={`${6 + i}s`} begin={`${i * 0.5}s`} repeatCount="indefinite" />
-                  </circle>
-                ))}
-              </svg>
-
-              {/* Wave layers — 880px wide SVG scrolled in 440px container */}
-              <svg style={{ position: 'absolute', bottom: 0, left: 0 }}
-                width="880" height="260">
-
-                {/* Wave 4 — sage, deepest */}
-                <g opacity="0.13">
-                  <animateTransform attributeName="transform" type="translate"
-                    from="0,0" to="-440,0" dur="32s" repeatCount="indefinite" />
-                  <path fill="#7AB8A0"
-                    d="M0,100 q110,-55 220,0 q110,55 220,0 q110,-55 220,0 q110,55 220,0 L880,260 L0,260 Z" />
-                </g>
-
-                {/* Wave 3 — violet, opposite direction */}
-                <g opacity="0.17">
-                  <animateTransform attributeName="transform" type="translate"
-                    from="-440,0" to="0,0" dur="24s" repeatCount="indefinite" />
-                  <path fill="#9B5CAF"
-                    d="M0,130 q110,-44 220,0 q110,44 220,0 q110,-44 220,0 q110,44 220,0 L880,260 L0,260 Z" />
-                </g>
-
-                {/* Wave 2 — blush */}
-                <g opacity="0.19">
-                  <animateTransform attributeName="transform" type="translate"
-                    from="0,0" to="-440,0" dur="18s" repeatCount="indefinite" />
-                  <path fill="#C47090"
-                    d="M0,162 q110,-32 220,0 q110,32 220,0 q110,-32 220,0 q110,32 220,0 L880,260 L0,260 Z" />
-                </g>
-
-                {/* Wave 1 — blue, front, opposite direction */}
-                <g opacity="0.28">
-                  <animateTransform attributeName="transform" type="translate"
-                    from="-440,0" to="0,0" dur="14s" repeatCount="indefinite" />
-                  <path fill="#5B8DEF"
-                    d="M0,196 q110,-24 220,0 q110,24 220,0 q110,-24 220,0 q110,24 220,0 L880,260 L0,260 Z" />
-                </g>
-              </svg>
-
-              {/* Soft top fade */}
-              <div className="absolute top-0 left-0 right-0 h-28 pointer-events-none"
-                style={{ background: 'linear-gradient(to bottom, rgba(235,242,255,0.7), transparent)' }} />
-
-              {/* Bottom shimmer highlight on waves */}
-              <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.18), transparent)' }} />
-            </div>
-          </div>
+          <p className="text-[10px] text-[#A090C0] mt-7 tracking-widest uppercase">Free · Private · No account needed</p>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        {/* Full-width water waves */}
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: 280 }}>
+          {/* Wave 1 — sage, deepest, slowest */}
+          <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+            style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '100%',
+              animation: 'wave-fwd 32s linear infinite', opacity: 0.13 }}>
+            <path fill="#7AB8A0"
+              d="M0,28 q25,-22 50,0 q25,22 50,0 q25,-22 50,0 q25,22 50,0 L200,100 L0,100 Z" />
+          </svg>
+          {/* Wave 2 — violet */}
+          <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+            style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '100%',
+              animation: 'wave-bwd 24s linear infinite', opacity: 0.17 }}>
+            <path fill="#9B5CAF"
+              d="M0,44 q25,-19 50,0 q25,19 50,0 q25,-19 50,0 q25,19 50,0 L200,100 L0,100 Z" />
+          </svg>
+          {/* Wave 3 — blush */}
+          <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+            style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '100%',
+              animation: 'wave-fwd 18s linear infinite', opacity: 0.21 }}>
+            <path fill="#C47090"
+              d="M0,60 q25,-15 50,0 q25,15 50,0 q25,-15 50,0 q25,15 50,0 L200,100 L0,100 Z" />
+          </svg>
+          {/* Wave 4 — blue, front, fastest */}
+          <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+            style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '100%',
+              animation: 'wave-bwd 14s linear infinite', opacity: 0.30 }}>
+            <path fill="#5B8DEF"
+              d="M0,74 q25,-11 50,0 q25,11 50,0 q25,-11 50,0 q25,11 50,0 L200,100 L0,100 Z" />
+          </svg>
+          {/* Soft gradient fade at top of wave area */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(to bottom, rgba(250,248,255,0.0) 0%, rgba(250,248,255,0.0) 50%, rgba(255,255,255,0.12) 100%)' }} />
+        </div>
+
+        <div className="absolute bottom-[300px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10">
           <span className="text-[9px] tracking-[0.4em] uppercase text-[#A090C0]">Scroll</span>
-          <div className="w-px h-10" style={{ background: 'linear-gradient(to bottom, #C4B0E8, transparent)' }} />
+          <div className="w-px h-8" style={{ background: 'linear-gradient(to bottom, #C4B0E8, transparent)' }} />
         </div>
       </section>
 
