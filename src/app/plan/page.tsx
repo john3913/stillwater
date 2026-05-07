@@ -103,7 +103,7 @@ function ToolCard({ href, iconBg, iconColor, label, sub, icon }: {
 
 export default function PlanDashboard() {
   const {
-    loaded, plan, saveName,
+    loaded, plan, saveName, lastEdited,
     wishesCompletion, proxyCompletion, valuesCompletion, lettersCompletion,
     arrangementsCompletion, documentsCompletion, overallCompletion,
   } = usePlan();
@@ -131,6 +131,12 @@ export default function PlanDashboard() {
   }, [loaded, overallCompletion]);
 
   if (!loaded) return null;
+
+  const daysSinceUpdate = lastEdited
+    ? Math.floor((Date.now() - new Date(lastEdited).getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+  const showReviewBanner = daysSinceUpdate !== null && daysSinceUpdate >= 180;
+  const reviewUrgent = daysSinceUpdate !== null && daysSinceUpdate >= 365;
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-14">
@@ -254,6 +260,39 @@ export default function PlanDashboard() {
         </Link>
       )}
 
+      {/* ── Annual review reminder ── */}
+      {showReviewBanner && (
+        <div className="flex gap-4 items-center rounded-2xl p-4 mb-5 transition-all hover:-translate-y-0.5"
+          style={{
+            background: reviewUrgent
+              ? 'linear-gradient(135deg, #FFF0F5, #FDE8EF)'
+              : 'linear-gradient(135deg, #FFF8EE, #FEF0E4)',
+            border: `1px solid ${reviewUrgent ? '#F5C8D8' : '#F0D0A8'}`,
+            boxShadow: `0 2px 12px ${reviewUrgent ? 'rgba(196,112,144,0.08)' : 'rgba(192,136,88,0.08)'}`,
+          }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: reviewUrgent ? '#FFCCD8' : '#FEE8C0' }}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              style={{ color: reviewUrgent ? '#C47090' : '#C08858' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium" style={{ color: reviewUrgent ? '#8B3060' : '#7A4820' }}>
+              {reviewUrgent ? 'Your plan is overdue for a review' : 'Time to review your plan'}
+            </p>
+            <p className="text-xs mt-0.5" style={{ color: reviewUrgent ? '#B05070' : '#A06030' }}>
+              Last updated {daysSinceUpdate} days ago. Life changes — your plan should too.
+            </p>
+          </div>
+          <Link href="/plan/wishes"
+            className="px-4 py-2 rounded-xl text-xs font-medium text-white shrink-0 transition-all hover:-translate-y-0.5"
+            style={{ background: reviewUrgent ? '#C47090' : '#C08858' }}>
+            Review now
+          </Link>
+        </div>
+      )}
+
       {/* ── Section grid ── */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {sections.map((s, i) => {
@@ -326,8 +365,8 @@ export default function PlanDashboard() {
       <div className="mt-14 pt-10" style={{ borderTop: '1px solid #E0D8F5' }}>
         <p className="text-[10px] tracking-[0.45em] uppercase text-[#A090C0] mb-6">Tools & resources</p>
 
-        {/* Featured 2-column: Readiness + Guided walkthrough */}
-        <div className="grid md:grid-cols-2 gap-4 mb-10">
+        {/* Featured 3-column: Readiness + Guided walkthrough + Notify proxy */}
+        <div className="grid md:grid-cols-3 gap-4 mb-10">
           <Link href="/plan/readiness"
             className="group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #EDE8FF 0%, #EBF2FF 100%)', border: '1px solid #C8C0F0', boxShadow: '0 2px 18px rgba(91,141,239,0.1)' }}>
@@ -342,7 +381,7 @@ export default function PlanDashboard() {
             <div className="flex-1">
               <p className="font-semibold text-[#2E1A60] text-base mb-1">Plan readiness check</p>
               <p className="text-xs text-[#6070A8] leading-relaxed">
-                See exactly what&apos;s complete, what&apos;s missing, and what would make your directive stronger — with direct links to fill each gap.
+                See exactly what&apos;s complete, what&apos;s missing, and what would make your directive stronger.
               </p>
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-[#7C5CAF]">
@@ -367,11 +406,38 @@ export default function PlanDashboard() {
             <div className="flex-1">
               <p className="font-semibold text-[#2E1A60] text-base mb-1">Guided walkthrough</p>
               <p className="text-xs text-[#6070A8] leading-relaxed">
-                Step through every section in the recommended order — pick up exactly where you left off, at your own pace.
+                Step through every section in the recommended order — pick up exactly where you left off.
               </p>
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-[#C47090]">
               Begin walkthrough
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          <Link href="/plan/notify-proxy"
+            className="group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #FDE8EF 0%, #FFF0F8 100%)', border: '1px solid #F5BAD0', boxShadow: '0 2px 18px rgba(196,112,144,0.1)' }}>
+            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #FFCCE0, transparent 70%)' }} />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
+              style={{ background: 'linear-gradient(135deg, #C47090, #D490A8)', boxShadow: '0 4px 14px rgba(196,112,144,0.3)' }}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-[#2E1A60] text-base mb-1">Notify your proxy</p>
+              <p className="text-xs text-[#6070A8] leading-relaxed">
+                {plan.proxy.primaryName
+                  ? `Send ${plan.proxy.primaryName.split(' ')[0]} a personal letter about their role and your wishes.`
+                  : 'Once you name a proxy, send them a personal letter explaining their role in your plan.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[#C47090]">
+              {plan.proxy.primaryName ? `Notify ${plan.proxy.primaryName.split(' ')[0]}` : 'Learn more'}
               <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

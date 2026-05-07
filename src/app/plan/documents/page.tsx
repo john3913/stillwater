@@ -104,6 +104,90 @@ export default function DocumentsPage() {
 
       <div className="flex flex-col gap-6">
 
+        {/* Before you sign — witness workflow guide */}
+        <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #E0D8F5' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: '#EDE8FF', color: '#7C5CAF' }}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030]">Before you sign</h2>
+              <p className="text-xs text-[#8070A8] mt-0.5">Four steps to make your directive legally valid in Minnesota</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 mb-6">
+            {([
+              {
+                step: '1',
+                title: 'Print your directive',
+                desc: 'Use the Review Directive tool to see and print the full legal document with your choices, signature line, and witness blocks.',
+                href: '/plan/review',
+                cta: 'Print directive →',
+              },
+              {
+                step: '2',
+                title: 'Read it carefully',
+                desc: 'Make sure every section reflects your wishes. This is the document that will guide your care — take your time.',
+              },
+              {
+                step: '3',
+                title: 'Sign in front of witnesses',
+                desc: 'Sign and date the document in person. Minnesota requires either a notary public OR two qualifying adult witnesses — not both.',
+              },
+              {
+                step: '4',
+                title: 'Give copies to key people',
+                desc: 'Your proxy, family members, and all healthcare providers should have a copy. Use the distribution tracker below to follow up.',
+              },
+            ] as { step: string; title: string; desc: string; href?: string; cta?: string }[]).map(({ step, title, desc, href, cta }) => (
+              <div key={step} className="flex gap-4 p-4 rounded-2xl"
+                style={{ background: '#FAF8FF', border: '1px solid #E0D8F5' }}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white"
+                  style={{ background: '#7C5CAF', minWidth: 28 }}>
+                  {step}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-[#1A1030] mb-0.5">{title}</p>
+                  <p className="text-xs text-[#8070A8] leading-relaxed">{desc}</p>
+                  {href && cta && (
+                    <Link href={href}
+                      className="inline-flex items-center gap-1 mt-2 text-xs font-medium transition-colors"
+                      style={{ color: '#7C5CAF' }}
+                      onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#5A3E8A')}
+                      onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#7C5CAF')}>
+                      {cta}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Who qualifies */}
+          <div className="rounded-2xl p-4" style={{ background: '#FEF0E4', border: '1px solid #F0D0A8' }}>
+            <p className="text-xs font-medium text-[#7A4820] mb-2.5">Who qualifies as a witness in Minnesota?</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                'Must be 18 years or older',
+                'Cannot be your healthcare proxy or their spouse',
+                'Cannot be your healthcare provider or their employee',
+                'Cannot be someone who would benefit from your estate',
+              ].map(r => (
+                <div key={r} className="flex items-center gap-2 text-xs text-[#7A4820]">
+                  <svg className="w-3 h-3 text-[#3E8868] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {r}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Legal checklist */}
         <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #E0D8F5' }}>
           <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030] mb-1">Legal checklist</h2>

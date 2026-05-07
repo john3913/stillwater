@@ -309,16 +309,24 @@ export default function ConversationPage() {
       </GuideSection>
 
       {/* Footer actions */}
-      <div className="mt-4 flex gap-3 no-print">
-        <button onClick={() => window.print()}
-          className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-white transition-all hover:-translate-y-0.5"
-          style={{ background: GRAD, boxShadow: '0 4px 20px rgba(91,141,239,0.28)' }}>
-          Print guide
-        </button>
+      <div className="mt-4 flex flex-col gap-3 no-print">
+        <div className="flex gap-3">
+          <button onClick={() => window.print()}
+            className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-white transition-all hover:-translate-y-0.5"
+            style={{ background: GRAD, boxShadow: '0 4px 20px rgba(91,141,239,0.28)' }}>
+            Print guide
+          </button>
+          {plan.proxy.primaryName && (
+            <Link href="/plan/notify-proxy"
+              className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-center text-white transition-all hover:-translate-y-0.5"
+              style={{ background: 'linear-gradient(135deg, #C47090, #D490A8)', boxShadow: '0 4px 18px rgba(196,112,144,0.28)' }}>
+              Notify {plan.proxy.primaryName.split(' ')[0]} →
+            </Link>
+          )}
+        </div>
         <Link href="/plan"
-          className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-[#7C5CAF] border text-center transition-all hover:bg-[#F0EAFF]"
-          style={{ borderColor: '#C4B0E8' }}>
-          ← Your plan
+          className="text-center text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors py-1">
+          ← Back to your plan
         </Link>
       </div>
 

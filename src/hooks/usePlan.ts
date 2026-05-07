@@ -205,10 +205,11 @@ export function usePlan() {
 
   const activeProfile = profiles.find(p => p.id === activeId);
   const activeProfileName = activeProfile?.displayName ?? '';
+  const lastEdited: string | null = (activeProfile as { lastEdited?: string } | undefined)?.lastEdited ?? null;
 
   return {
     plan, loaded,
-    profiles, activeId, activeProfileName,
+    profiles, activeId, activeProfileName, lastEdited,
     switchProfile, createNewProfile, deleteProfile, renameProfile,
     saveName, saveWishes, saveProxy, saveValues, saveLetter, deleteLetter,
     saveArrangements, saveDocuments, saveProxyAndPrincipal, saveLegacy,
