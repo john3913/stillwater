@@ -7,12 +7,12 @@ import { usePlan } from '@/hooks/usePlan';
 const GRAD = 'linear-gradient(135deg, #5B8DEF 0%, #9B5CAF 55%, #C47090 100%)';
 
 const SECS = [
-  { label: 'Wishes',       short: 'W', color: '#7C5CAF', href: '/plan/wishes' },
-  { label: 'Proxy',        short: 'P', color: '#C47090', href: '/plan/proxy' },
-  { label: 'Values',       short: 'V', color: '#5E9E7E', href: '/plan/values' },
-  { label: 'Letters',      short: 'L', color: '#C08858', href: '/plan/letters' },
-  { label: 'Arrangements', short: 'A', color: '#9B68D0', href: '/plan/arrangements' },
-  { label: 'Documents',    short: 'D', color: '#3E8868', href: '/plan/documents' },
+  { label: 'Wishes',       short: 'W', color: '#7C5CAF', href: '/plan/wishes',       desc: 'CPR, ventilators, pain care, organ donation' },
+  { label: 'Proxy',        short: 'P', color: '#C47090', href: '/plan/proxy',         desc: 'Who speaks for you when you cannot' },
+  { label: 'Values',       short: 'V', color: '#5E9E7E', href: '/plan/values',        desc: 'What matters most, fears, hopes' },
+  { label: 'Letters',      short: 'L', color: '#C08858', href: '/plan/letters',       desc: 'Personal messages for loved ones' },
+  { label: 'Arrangements', short: 'A', color: '#9B68D0', href: '/plan/arrangements',  desc: 'Funeral, burial, practical wishes' },
+  { label: 'Documents',    short: 'D', color: '#3E8868', href: '/plan/documents',     desc: 'Legal signing & distribution' },
 ];
 
 function ProfileSwitcher({
@@ -108,6 +108,21 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="min-h-screen bg-[#FAF8FF]">
+
+      {/* ── Subtle ambient wave background — fixed, very low opacity ── */}
+      <div className="no-print fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '45%',
+            animation: 'wave-bwd 38s linear infinite', opacity: 0.042 }}>
+          <path fill="#9B5CAF" d="M0,32 q25,-22 50,0 q25,22 50,0 q25,-22 50,0 q25,22 50,0 L200,100 L0,100 Z" />
+        </svg>
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '200%', height: '45%',
+            animation: 'wave-fwd 26s linear infinite', opacity: 0.055 }}>
+          <path fill="#5B8DEF" d="M0,58 q25,-16 50,0 q25,16 50,0 q25,-16 50,0 q25,16 50,0 L200,100 L0,100 Z" />
+        </svg>
+      </div>
+
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#FAF8FF]/92 backdrop-blur-xl border-b border-[#E0D8F5]">
 
         {/* Logo row */}
@@ -152,10 +167,35 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
                 return (
                   <div key={s.href} className="flex items-center" style={{ flex: next ? 1 : 0 }}>
                     {/* Node */}
-                    <Link href={s.href} title={loaded ? `${s.label}: ${pct}%` : s.label}
+                    <Link href={s.href}
                       className="flex flex-col items-center gap-1 group relative shrink-0">
+
+                      {/* Hover tooltip — desktop only */}
+                      <div className="hidden sm:block absolute top-full mt-3 left-1/2 -translate-x-1/2 z-[200]
+                        opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0
+                        transition-all duration-200 pointer-events-none">
+                        {/* Arrow */}
+                        <div className="flex justify-center">
+                          <div className="w-2.5 h-2.5 rotate-45 -mb-[6px] relative z-10"
+                            style={{ background: 'white', border: '1px solid #E8E0F5', borderBottom: 'none', borderRight: 'none', boxShadow: '-1px -1px 3px rgba(90,62,138,0.05)' }} />
+                        </div>
+                        <div className="bg-white rounded-2xl px-4 py-3 min-w-[160px] max-w-[200px] text-left"
+                          style={{ border: '1px solid #E8E0F5', boxShadow: '0 8px 32px rgba(90,62,138,0.14)' }}>
+                          <p className="font-[family-name:var(--font-cormorant)] text-base font-medium text-[#1A1030] mb-0.5 leading-snug">{s.label}</p>
+                          <p className="text-[10px] text-[#8070A8] leading-snug mb-2.5">{s.desc}</p>
+                          <div className="h-1 rounded-full overflow-hidden mb-1.5" style={{ background: '#F0EBF8' }}>
+                            <div className="h-full rounded-full transition-all duration-500"
+                              style={{ width: `${pct}%`, background: s.color }} />
+                          </div>
+                          <p className="text-[9px] font-medium"
+                            style={{ color: pct === 100 ? '#3E8868' : pct > 0 ? s.color : '#C4B8D8' }}>
+                            {pct === 100 ? '✓ Complete' : pct > 0 ? `${pct}% complete` : 'Not started'}
+                          </p>
+                        </div>
+                      </div>
+
                       {/* Circle */}
-                      <div className="relative flex items-center justify-center transition-all duration-400"
+                      <div className="relative flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                         style={{
                           width: 24, height: 24, borderRadius: '50%',
                           background: done
@@ -206,7 +246,7 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
       </nav>
 
       {/* Content — pt accounts for nav (52px) + strip (54px) + border (1px) ≈ 109px */}
-      <div className="pt-[109px]">{children}</div>
+      <div className="pt-[109px] relative z-10">{children}</div>
     </div>
   );
 }
