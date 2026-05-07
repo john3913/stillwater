@@ -182,10 +182,10 @@ export default function WishesPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
         <div className="flex items-center justify-between mb-3">
-          <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+          <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
           <span className="text-xs text-[#8070A8] tracking-wider">{stepIndex + 1} of {steps.length}</span>
         </div>
         <div className="h-1 rounded-full overflow-hidden" style={{ background: '#EDE8FF' }}>

@@ -34,9 +34,9 @@ export default function SharePage() {
   if (!loaded) return null;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
       </div>
 
       <p className="text-xs tracking-[0.3em] text-[#5B8DEF] uppercase mb-4">Private sharing</p>

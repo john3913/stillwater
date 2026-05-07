@@ -163,29 +163,66 @@ export default function ViewPage() {
           style={{ background: 'linear-gradient(135deg, #EBF2FF, #EDE8FF, #FDE8EF)', border: '1px solid rgba(155,92,175,0.14)' }}>
           <p className="text-[10px] tracking-[0.5em] uppercase text-[#8070A8] mb-3">Minnesota Health Care Directive</p>
           <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light text-[#1A1030] mb-2">Advance Care Plan</h1>
+          {plan.name && <p className="font-[family-name:var(--font-cormorant)] text-2xl font-light text-[#4A3870] mb-2">{plan.name}</p>}
           <p className="text-xs text-[#8070A8]">Shared via Stillwater · {date}</p>
         </div>
 
         {/* Section I: Proxy */}
         <Section title="I · Healthcare Agent" color="#C47090">
           {plan.proxy.primaryName ? (
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-3 font-medium">Primary Agent</p>
-                <Row label="Name" value={plan.proxy.primaryName} />
-                <Row label="Relationship" value={plan.proxy.primaryRelationship} />
-                <Row label="Phone" value={plan.proxy.primaryPhone} />
-                <Row label="Email" value={plan.proxy.primaryEmail} />
-              </div>
-              {plan.proxy.alternateName && (
-                <div>
-                  <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-3 font-medium">Alternate Agent</p>
-                  <Row label="Name" value={plan.proxy.alternateName} />
-                  <Row label="Relationship" value={plan.proxy.alternateRelationship} />
-                  <Row label="Phone" value={plan.proxy.alternatePhone} />
+            <>
+              {plan.proxy.agentActMode && (
+                <div className="mb-5 p-3 rounded-xl text-xs" style={{ background: '#FDE8EF', color: '#6A1040', border: '1px solid #E8A8C0' }}>
+                  Agents may act: <strong>{plan.proxy.agentActMode === 'alone' ? 'independently' : 'jointly'}</strong>
                 </div>
               )}
-            </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
+                <div>
+                  <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-3 font-medium">Primary Agent</p>
+                  <Row label="Name" value={plan.proxy.primaryName} />
+                  <Row label="Relationship" value={plan.proxy.primaryRelationship} />
+                  <Row label="Phone" value={plan.proxy.primaryPhone} />
+                  <Row label="Email" value={plan.proxy.primaryEmail} />
+                  <Row label="Address" value={plan.proxy.primaryAddress} />
+                </div>
+                {plan.proxy.alternateName && (
+                  <div>
+                    <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-3 font-medium">First Successor</p>
+                    <Row label="Name" value={plan.proxy.alternateName} />
+                    <Row label="Relationship" value={plan.proxy.alternateRelationship} />
+                    <Row label="Phone" value={plan.proxy.alternatePhone} />
+                    <Row label="Address" value={plan.proxy.alternateAddress} />
+                  </div>
+                )}
+                {plan.proxy.secondAlternateName && (
+                  <div>
+                    <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-3 font-medium">Second Successor</p>
+                    <Row label="Name" value={plan.proxy.secondAlternateName} />
+                    <Row label="Relationship" value={plan.proxy.secondAlternateRelationship} />
+                    <Row label="Phone" value={plan.proxy.secondAlternatePhone} />
+                    <Row label="Address" value={plan.proxy.secondAlternateAddress} />
+                  </div>
+                )}
+              </div>
+              {plan.proxy.additionalPowers && Object.values(plan.proxy.additionalPowers).some(Boolean) && (
+                <div className="mb-5">
+                  <p className="text-xs text-[#8070A8] uppercase tracking-wider mb-2 font-medium">Additional Powers Granted</p>
+                  <div className="flex flex-col gap-1">
+                    {plan.proxy.additionalPowers.whileCompetent && <p className="text-xs text-[#4A3870]">· May act while I still have capacity</p>}
+                    {plan.proxy.additionalPowers.funeralBurial && <p className="text-xs text-[#4A3870]">· Funeral and burial decisions</p>}
+                    {plan.proxy.additionalPowers.mentalHealth && <p className="text-xs text-[#4A3870]">· Mental health care including ECT</p>}
+                    {plan.proxy.additionalPowers.pregnancy && <p className="text-xs text-[#4A3870]">· Pregnancy-related decisions</p>}
+                    {plan.proxy.additionalPowers.afterDivorce && <p className="text-xs text-[#4A3870]">· Continues after divorce or dissolution</p>}
+                  </div>
+                </div>
+              )}
+              {plan.proxy.agentLimitations && (
+                <div className="mb-5 p-4 rounded-2xl" style={{ background: '#FEF0E4', border: '1px solid #F0D0A8' }}>
+                  <p className="text-[10px] tracking-widest uppercase text-[#A090C0] mb-2">Limitations on agent&apos;s powers</p>
+                  <p className="text-sm text-[#4A3870] leading-relaxed">{plan.proxy.agentLimitations}</p>
+                </div>
+              )}
+            </>
           ) : (
             <p className="text-sm text-[#C4B0E8] italic">No proxy named in this plan.</p>
           )}
@@ -239,6 +276,23 @@ export default function ViewPage() {
               {plan.values.qualityVsQuantity && <Row label="Quality vs. length of life" value={QUALITY_LABELS[plan.values.qualityVsQuantity] ?? ''} />}
               {plan.values.biggestFear && <Row label="What I fear most" value={plan.values.biggestFear} />}
               {plan.values.biggestHope && <Row label="What I hope for" value={plan.values.biggestHope} />}
+              {(plan.values.scenarioTerminal || plan.values.scenarioBrainInjury || plan.values.scenarioDementia) && (
+                <div className="p-4 rounded-2xl" style={{ background: '#F8FEFC', border: '1px solid #C8E8D8' }}>
+                  <p className="text-[10px] tracking-widest uppercase text-[#A090C0] mb-2">Scenario guidance (0–4 importance scale)</p>
+                  {plan.values.scenarioTerminal && <Row label="Terminal illness" value={`${plan.values.scenarioTerminal} / 4`} />}
+                  {plan.values.scenarioBrainInjury && <Row label="Severe brain injury" value={`${plan.values.scenarioBrainInjury} / 4`} />}
+                  {plan.values.scenarioDementia && <Row label="Severe dementia" value={`${plan.values.scenarioDementia} / 4`} />}
+                </div>
+              )}
+              {plan.values.conditionsToStop && <Row label="Conditions to stop treatment" value={plan.values.conditionsToStop} />}
+              {plan.values.preferredCareLocation && (
+                <Row label="Preferred care location if dying"
+                  value={[
+                    plan.values.preferredCareLocation === 'nursing-home' ? 'Nursing home' : plan.values.preferredCareLocation.charAt(0).toUpperCase() + plan.values.preferredCareLocation.slice(1),
+                    plan.values.preferredCareLocationName,
+                  ].filter(Boolean).join(' — ')}
+                />
+              )}
               {plan.values.spiritualBeliefs && <Row label="Spiritual or religious beliefs" value={plan.values.spiritualBeliefs} />}
               {plan.values.importantRituals && <Row label="Cultural or family traditions" value={plan.values.importantRituals} />}
             </div>

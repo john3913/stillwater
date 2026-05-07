@@ -53,7 +53,7 @@ function LetterEditor({ initial, onSave, onCancel }: {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col gap-6">
+        <div className="max-w-4xl mx-auto px-6 py-10 flex flex-col gap-6">
 
           <div>
             <label className="block text-xs tracking-wider text-[#8070A8] uppercase mb-2">To</label>
@@ -190,9 +190,9 @@ export default function LettersPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
       </div>
 
       <div className="flex items-end justify-between mb-8">

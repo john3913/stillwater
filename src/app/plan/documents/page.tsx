@@ -91,9 +91,9 @@ export default function DocumentsPage() {
   const inputBlur  = (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = '#E0D8F5');
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
       </div>
 
       <p className="text-xs tracking-[0.3em] text-[#7C5CAF] uppercase mb-4">Legal validity</p>
@@ -178,13 +178,29 @@ export default function DocumentsPage() {
                 onBlurCapture={inputBlur}
               />
             </div>
+            <div className="rounded-xl p-4 flex gap-3 items-start" style={{ background: '#FEF0E4', border: '1px solid #F0D0A8' }}>
+              <svg className="w-4 h-4 text-[#C08858] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              </svg>
+              <p className="text-xs text-[#7A4820] leading-relaxed">
+                <strong>Do not keep your original in a safe deposit box.</strong> Banks are closed nights, weekends, and holidays — exactly when emergencies happen. Keep the signed original somewhere accessible at home or with your healthcare agent.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Distribution */}
         <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #E0D8F5' }}>
           <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030] mb-1">Who has a copy</h2>
-          <p className="text-xs text-[#8070A8] mb-6">Minnesota law says you should give copies to your proxy, family members, and healthcare providers. Track who has received one.</p>
+          <p className="text-xs text-[#8070A8] mb-4">Minnesota law says you should give copies to your proxy, family members, and healthcare providers. Track who has received one.</p>
+          <div className="rounded-xl p-4 mb-5 flex gap-3 items-start" style={{ background: '#EBF2FF', border: '1px solid #BDD0FF' }}>
+            <svg className="w-4 h-4 text-[#5B8DEF] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-xs text-[#3A6090] leading-relaxed">
+              <strong>Minnesota driver&apos;s license tip:</strong> You can note that you have a health care directive on your MN driver&apos;s license or state ID. Visit any Driver and Vehicle Services (DVS) office or update your record at dvs.mn.gov.
+            </p>
+          </div>
 
           {plan.documents.distribution.length === 0 && (
             <p className="text-sm text-[#C4B0E8] mb-4 italic">No one added yet. Add your proxy, family, and doctor.</p>
@@ -217,6 +233,27 @@ export default function DocumentsPage() {
           </div>
         </div>
 
+        {/* POLST info */}
+        <div className="rounded-3xl p-8" style={{ background: '#EDF7F3', border: '1px solid #B8E0D0' }}>
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#C8EED8', color: '#3E8868' }}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="font-[family-name:var(--font-cormorant)] text-xl font-medium text-[#1A1030]">Consider a POLST form</h2>
+              <p className="text-xs text-[#3E6858] mt-1 leading-relaxed">
+                A POLST (Physician Orders for Life-Sustaining Treatment) is a separate medical order — signed by both you and your doctor — that is honored immediately by emergency responders. It complements your health care directive but is not the same thing.
+              </p>
+            </div>
+          </div>
+          <Link href="/plan/polst"
+            className="inline-flex items-center gap-2 text-xs font-medium text-[#3E8868] hover:text-[#2A6050] transition-colors">
+            Learn about POLST in Minnesota →
+          </Link>
+        </div>
+
         {/* Revocation info */}
         <div className="rounded-3xl p-8" style={{ background: '#FAF8FF', border: '1px solid #E0D8F5' }}>
           <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-medium text-[#1A1030] mb-4">How to cancel or update your directive</h2>
@@ -239,7 +276,7 @@ export default function DocumentsPage() {
       </div>
 
       <div className="flex items-center justify-between mt-10">
-        <Link href="/plan" className="text-sm text-[#8070A8] hover:text-[#4A3870] transition-colors px-4 py-2">← Back to plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
         <button onClick={handleSave}
           className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all"
           style={{ background: saved ? '#5A3E8A' : '#7C5CAF', color: 'white' }}>

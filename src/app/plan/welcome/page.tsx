@@ -16,7 +16,7 @@ const planSections = [
 
 export default function WelcomePage() {
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
+    <div className="max-w-4xl mx-auto px-6 py-16">
 
       {/* Rings graphic */}
       <div className="flex items-center justify-center mb-14">
@@ -104,8 +104,8 @@ export default function WelcomePage() {
           style={{ background: GRAD, boxShadow: '0 4px 20px rgba(91,141,239,0.3)' }}>
           Begin my plan →
         </Link>
-        <Link href="/plan" className="text-xs text-[#A090C0] hover:text-[#8070A8] transition-colors">
-          ← Back to your plan
+        <Link href="/plan" className="back-btn">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" width="16" height="16"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan
         </Link>
       </div>
 

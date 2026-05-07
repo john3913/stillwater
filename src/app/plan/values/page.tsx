@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePlan } from '@/hooks/usePlan';
-import type { ValuesData } from '@/lib/planTypes';
+import type { ValuesData, ScenarioRating } from '@/lib/planTypes';
 
 const P = '#5E9E7E';
+const IMPORTANCE = ['Not at all', 'Slightly', 'Moderately', 'Very', 'Extremely'];
 
 function ChoiceCard({ label, description, selected, onSelect }: {
   label: string; description: string; selected: boolean; onSelect: () => void;
@@ -44,6 +45,37 @@ function Prompt({ label, hint, value, onChange, placeholder, rows = 4 }: {
   );
 }
 
+function ImportanceRating({ question, hint, value, onChange }: {
+  question: string; hint?: string;
+  value: ScenarioRating;
+  onChange: (v: ScenarioRating) => void;
+}) {
+  return (
+    <div>
+      <p className="text-sm font-medium text-[#1A1030] leading-relaxed mb-1">{question}</p>
+      {hint && <p className="text-xs text-[#8070A8] mb-3 leading-relaxed">{hint}</p>}
+      <div className="flex gap-2 mt-2">
+        {(['0', '1', '2', '3', '4'] as ScenarioRating[]).filter(Boolean).map((v) => (
+          <button key={v} onClick={() => onChange(v as ScenarioRating)}
+            className="flex-1 flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-xl transition-all"
+            style={value === v
+              ? { background: '#E8F5EE', border: '2px solid #5E9E7E' }
+              : { background: 'white', border: '1px solid #E0D8F5' }}>
+            <span className="text-base font-semibold leading-none" style={{ color: value === v ? '#5E9E7E' : '#A090C0' }}>{v}</span>
+            <span className="text-[8px] text-center leading-tight" style={{ color: value === v ? '#3E7E5E' : '#C4B0E8' }}>
+              {IMPORTANCE[parseInt(v as string)]}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="flex justify-between mt-1 px-1">
+        <span className="text-[9px] text-[#C4B0E8]">0 = Not at all</span>
+        <span className="text-[9px] text-[#C4B0E8]">4 = Extremely important</span>
+      </div>
+    </div>
+  );
+}
+
 export default function ValuesPage() {
   const router = useRouter();
   const { plan, loaded, saveValues } = usePlan();
@@ -54,6 +86,9 @@ export default function ValuesPage() {
 
   const set = (field: keyof ValuesData) => (value: string) =>
     setForm(prev => ({ ...prev, [field]: value }));
+
+  const setRating = (field: keyof ValuesData) => (v: ScenarioRating) =>
+    setForm(prev => ({ ...prev, [field]: v }));
 
   const hasAny = form.whatMatters || form.qualityVsQuantity || form.biggestFear || form.biggestHope;
 
@@ -84,9 +119,9 @@ export default function ValuesPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <Link href="/plan" className="text-xs text-[#8070A8] hover:text-[#4A3870] transition-colors">← Your plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
       </div>
 
       <p className="text-xs tracking-[0.3em] text-[#5E9E7E] uppercase mb-4">Personal values</p>
@@ -94,7 +129,7 @@ export default function ValuesPage() {
         What matters most to you?
       </h1>
       <p className="text-[#4A3870] text-sm leading-relaxed mb-10 max-w-md opacity-80">
-        Medical decisions rarely have simple answers. Your values — what you fear, what you hope for, what brings meaning — help your care team and loved ones make decisions in your spirit, even in circumstances you couldn't anticipate.
+        Medical decisions rarely have simple answers. Your values — what you fear, what you hope for, how you think about specific scenarios — help your care team and loved ones make decisions in your spirit.
       </p>
 
       <div className="flex flex-col gap-8">
@@ -137,6 +172,46 @@ export default function ValuesPage() {
           </div>
         </div>
 
+        {/* Scenario-based ratings */}
+        <div className="bg-white rounded-3xl p-8 flex flex-col gap-7" style={{ border: '1px solid #E0D8F5' }}>
+          <div>
+            <p className="text-xs tracking-wider text-[#8070A8] uppercase mb-1.5">Specific scenarios</p>
+            <p className="text-[#4A3870] text-sm leading-relaxed mb-6 opacity-80">
+              For each situation below, rate how important it is to you that life-sustaining treatment be continued. 0 means you would likely want to stop or limit treatment; 4 means you would want all available treatment continued.
+            </p>
+            <div className="flex flex-col gap-7">
+              <ImportanceRating
+                question="If I have a terminal illness and treatment would only delay when I die"
+                hint="e.g. terminal cancer where further treatment prolongs dying rather than meaningful life"
+                value={form.scenarioTerminal}
+                onChange={setRating('scenarioTerminal')}
+              />
+              <ImportanceRating
+                question="If I have severe and permanent brain injury with little chance of regaining consciousness"
+                hint="e.g. persistent vegetative state or severe brain damage from stroke or accident"
+                value={form.scenarioBrainInjury}
+                onChange={setRating('scenarioBrainInjury')}
+              />
+              <ImportanceRating
+                question="If I have severe dementia or confusion and my condition will only get worse"
+                hint="e.g. advanced Alzheimer's where I no longer recognize family or can have meaningful experiences"
+                value={form.scenarioDementia}
+                onChange={setRating('scenarioDementia')}
+              />
+            </div>
+          </div>
+
+          <Prompt
+            label="Conditions under which treatment should stop"
+            hint="Describe any specific conditions or circumstances under which you feel treatment to prolong your life should no longer be used."
+            placeholder="e.g. If I cannot recognize my family and cannot communicate, I would not want extraordinary measures used to keep me alive. / If I require a machine to breathe and there is no reasonable hope of recovery…"
+            value={form.conditionsToStop}
+            onChange={set('conditionsToStop')}
+            rows={4}
+          />
+        </div>
+
+        {/* Fears and hopes */}
         <div className="bg-white rounded-3xl p-8 grid gap-6" style={{ border: '1px solid #E0D8F5' }}>
           <Prompt
             label="What do you fear most about serious illness or dying?"
@@ -154,6 +229,59 @@ export default function ValuesPage() {
           />
         </div>
 
+        {/* Care preferences */}
+        <div className="bg-white rounded-3xl p-8 flex flex-col gap-7" style={{ border: '1px solid #E0D8F5' }}>
+          <p className="text-xs tracking-wider text-[#8070A8] uppercase -mb-2">Care preferences</p>
+
+          <ImportanceRating
+            question="How important is it that my pain be controlled, even if it might shorten my life?"
+            value={form.painTradeOff}
+            onChange={setRating('painTradeOff')}
+          />
+
+          <ImportanceRating
+            question="How important is it to you to avoid being a financial burden to those you care about?"
+            value={form.financialBurden}
+            onChange={setRating('financialBurden')}
+          />
+
+          <div>
+            <p className="text-sm font-medium text-[#1A1030] mb-1">If I were dying, I would prefer to receive care at:</p>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {[
+                { value: 'home', label: 'Home' },
+                { value: 'hospital', label: 'Hospital' },
+                { value: 'nursing-home', label: 'Nursing home' },
+                { value: 'hospice', label: 'Hospice facility' },
+                { value: 'other', label: 'Other / wherever best' },
+              ].map(opt => (
+                <button key={opt.value}
+                  onClick={() => setForm(prev => ({ ...prev, preferredCareLocation: opt.value as ValuesData['preferredCareLocation'] }))}
+                  className="text-left px-4 py-3 rounded-xl text-sm transition-all"
+                  style={form.preferredCareLocation === opt.value
+                    ? { background: '#E8F5EE', border: '2px solid #5E9E7E', color: '#1A3830', fontWeight: 500 }
+                    : { background: 'white', border: '1px solid #E0D8F5', color: '#4A3870' }}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            {form.preferredCareLocation && form.preferredCareLocation !== 'home' && form.preferredCareLocation !== 'other' && (
+              <div className="mt-3">
+                <input type="text"
+                  placeholder={form.preferredCareLocation === 'hospital' ? 'Which hospital, if you have a preference?' : form.preferredCareLocation === 'nursing-home' ? 'Which facility, if you have a preference?' : 'Which hospice or facility?'}
+                  value={form.preferredCareLocationName}
+                  onChange={e => setForm(prev => ({ ...prev, preferredCareLocationName: e.target.value }))}
+                  className="w-full rounded-xl px-4 py-3 text-sm placeholder:text-[#C4B0E8] focus:outline-none transition-colors"
+                  style={{ border: '1px solid #E0D8F5', background: 'white', color: '#1A1030' }}
+                  onFocus={e => (e.target.style.borderColor = '#90C8A8')}
+                  onBlur={e => (e.target.style.borderColor = '#E0D8F5')}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spiritual / Cultural */}
         <div className="bg-white rounded-3xl p-8 grid gap-6" style={{ border: '1px solid #E0D8F5' }}>
           <Prompt
             label="Spiritual or religious beliefs (optional)"
@@ -173,7 +301,7 @@ export default function ValuesPage() {
       </div>
 
       <div className="flex items-center justify-between mt-10">
-        <Link href="/plan" className="text-sm text-[#8070A8] hover:text-[#4A3870] transition-colors px-4 py-2">← Back to plan</Link>
+        <Link href="/plan" className="back-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg> Your plan</Link>
         <button onClick={handleSave} disabled={!hasAny}
           className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all"
           style={hasAny
