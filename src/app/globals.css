@@ -271,6 +271,56 @@ body {
   to   { transform: translateX(0); }
 }
 
+/* ── Stepper in-progress ripple ── */
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.65; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ── Section card accent bar shimmer ── */
+@keyframes bar-slide {
+  0%   { transform: translateY(-150%); }
+  100% { transform: translateY(350%); }
+}
+.accent-bar {
+  position: relative;
+  overflow: hidden;
+}
+.accent-bar::after {
+  content: '';
+  position: absolute;
+  inset-x: 0;
+  top: 0;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.75), transparent);
+  transform: translateY(-150%);
+}
+.group:hover .accent-bar::after {
+  animation: bar-slide 0.65s ease-out forwards;
+}
+
+/* ── Featured card hover shimmer ── */
+@keyframes feat-shimmer {
+  0%        { left: -60%; }
+  100%      { left: 130%; }
+}
+.feat-card::after {
+  content: '';
+  position: absolute;
+  inset-y: 0;
+  left: -60%;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.feat-card:hover::after {
+  opacity: 1;
+  animation: feat-shimmer 0.7s ease forwards;
+}
+
 /* ── Legacy (kept for reference) ── */
 @keyframes orbit-blue {
   from { transform: rotate(0deg) translateX(80px); }

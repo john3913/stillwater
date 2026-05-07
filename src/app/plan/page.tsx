@@ -83,7 +83,7 @@ function ToolCard({ href, iconBg, iconColor, label, sub, icon }: {
         (e.currentTarget as HTMLElement).style.borderColor = '#E8E0F5';
         (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(90,62,138,0.05)';
       }}>
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
         style={{ background: iconBg, color: iconColor }}>
         {icon}
       </div>
@@ -93,7 +93,7 @@ function ToolCard({ href, iconBg, iconColor, label, sub, icon }: {
       </div>
       <div className="flex items-center gap-1 text-xs font-medium transition-colors" style={{ color: iconColor }}>
         Open
-        <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </div>
@@ -179,9 +179,9 @@ export default function PlanDashboard() {
           boxShadow: '0 4px 28px rgba(91,141,239,0.08), 0 1px 4px rgba(90,62,138,0.06)',
         }}>
         <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-20 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)', animation: 'float-a 18s ease-in-out infinite' }} />
         <div className="absolute -bottom-16 -left-16 w-60 h-60 rounded-full opacity-15 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #F5C0DC, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #F5C0DC, transparent 70%)', animation: 'float-b 23s ease-in-out infinite' }} />
 
         <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-lg">
@@ -314,7 +314,7 @@ export default function PlanDashboard() {
               }}
             >
               {/* Left gradient accent */}
-              <div className="absolute left-0 top-5 bottom-5 w-[3px] rounded-r-full"
+              <div className="accent-bar absolute left-0 top-5 bottom-5 w-[3px] rounded-r-full"
                 style={{ background: `linear-gradient(to bottom, ${s.barFrom}, ${s.barTo})` }} />
 
               {/* Icon + status */}
@@ -368,10 +368,10 @@ export default function PlanDashboard() {
         {/* Featured 3-column: Readiness + Guided walkthrough + Notify proxy */}
         <div className="grid md:grid-cols-3 gap-4 mb-10">
           <Link href="/plan/readiness"
-            className="group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #EDE8FF 0%, #EBF2FF 100%)', border: '1px solid #C8C0F0', boxShadow: '0 2px 18px rgba(91,141,239,0.1)' }}>
             <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20 pointer-events-none"
-              style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)' }} />
+              style={{ background: 'radial-gradient(circle, #B8D0FF, transparent 70%)', animation: 'float-a 14s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
               style={{ background: GRAD, boxShadow: '0 4px 14px rgba(91,141,239,0.3)' }}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -393,12 +393,12 @@ export default function PlanDashboard() {
           </Link>
 
           <Link href="/plan/guide"
-            className="group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #FDE8EF 0%, #F5F0FF 100%)', border: '1px solid #F0BAD0', boxShadow: '0 2px 18px rgba(196,112,144,0.1)' }}>
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20 pointer-events-none"
-              style={{ background: 'radial-gradient(circle, #F5C0DC, transparent 70%)' }} />
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #FFF8EE 0%, #FEF0E4 100%)', border: '1px solid #F0D0A8', boxShadow: '0 2px 18px rgba(192,136,88,0.1)' }}>
+            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-25 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #FFD0A0, transparent 70%)', animation: 'float-b 17s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
-              style={{ background: 'linear-gradient(135deg, #C47090, #9B5CAF)', boxShadow: '0 4px 14px rgba(196,112,144,0.3)' }}>
+              style={{ background: 'linear-gradient(135deg, #C08858, #D4A070)', boxShadow: '0 4px 14px rgba(192,136,88,0.3)' }}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
               </svg>
@@ -409,21 +409,21 @@ export default function PlanDashboard() {
                 Step through every section in the recommended order — pick up exactly where you left off.
               </p>
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-medium text-[#C47090]">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[#C08858]">
               Begin walkthrough
-              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
           </Link>
 
           <Link href="/plan/notify-proxy"
-            className="group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #FDE8EF 0%, #FFF0F8 100%)', border: '1px solid #F5BAD0', boxShadow: '0 2px 18px rgba(196,112,144,0.1)' }}>
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20 pointer-events-none"
-              style={{ background: 'radial-gradient(circle, #FFCCE0, transparent 70%)' }} />
+            className="feat-card group relative overflow-hidden flex flex-col gap-4 rounded-3xl p-6 transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #E8F5EE 0%, #EDF7F3 100%)', border: '1px solid #B8DFC8', boxShadow: '0 2px 18px rgba(62,136,104,0.1)' }}>
+            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-25 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #A8DFC0, transparent 70%)', animation: 'float-c 20s ease-in-out infinite' }} />
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white"
-              style={{ background: 'linear-gradient(135deg, #C47090, #D490A8)', boxShadow: '0 4px 14px rgba(196,112,144,0.3)' }}>
+              style={{ background: 'linear-gradient(135deg, #5E9E7E, #7AAE8E)', boxShadow: '0 4px 14px rgba(94,158,126,0.3)' }}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -436,9 +436,9 @@ export default function PlanDashboard() {
                   : 'Once you name a proxy, send them a personal letter explaining their role in your plan.'}
               </p>
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-medium text-[#C47090]">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[#5E9E7E]">
               {plan.proxy.primaryName ? `Notify ${plan.proxy.primaryName.split(' ')[0]}` : 'Learn more'}
-              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>

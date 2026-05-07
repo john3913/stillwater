@@ -200,8 +200,6 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
                           width: 24, height: 24, borderRadius: '50%',
                           background: done
                             ? `linear-gradient(135deg, ${s.color}, ${s.color}CC)`
-                            : started
-                            ? 'transparent'
                             : 'transparent',
                           border: done
                             ? 'none'
@@ -210,6 +208,11 @@ export default function PlanLayout({ children }: { children: React.ReactNode }) 
                             : '1.5px solid #D4CAE8',
                           boxShadow: done ? `0 2px 10px ${s.color}44` : 'none',
                         }}>
+                        {/* Ripple for in-progress */}
+                        {started && (
+                          <div className="absolute inset-0 rounded-full pointer-events-none"
+                            style={{ border: `1.5px solid ${s.color}`, animation: 'pulse-ring 2.2s ease-out infinite' }} />
+                        )}
                         {done ? (
                           <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
